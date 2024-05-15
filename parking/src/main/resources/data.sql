@@ -1,0 +1,32 @@
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A1', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A2', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A3', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A4', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A5', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A6', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A7', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A8', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A9', 1, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('A10', 1, false, NULL);
+
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B1', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B2', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B3', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B4', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B5', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B6', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B7', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B8', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B9', 2, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('B10', 2, false, NULL);
+
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C1', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C2', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C3', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C4', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C5', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C6', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C7', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C8', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C9', 3, false, NULL);
+INSERT INTO PARKING_SPOT(number, floor, taken, registration_number) VALUES ('C10', 3, false, NULL);
