@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.parking.exceptions.ParkingSpotNotOccupiedException;
+import project.parking.exceptions.carExceptions.CarException;
+import project.parking.exceptions.parkingSpotExceptions.ParkingSpotAlreadyExistsException;
+import project.parking.exceptions.parkingSpotExceptions.ParkingSpotException;
+import project.parking.exceptions.parkingSpotExceptions.ParkingSpotNotOccupiedException;
 import project.parking.model.ParkingSpot;
 import project.parking.service.ParkingSpotService;
 
@@ -27,14 +30,25 @@ public class ParkingSpotController {
     }
 
     @PostMapping("/{parkingSpotNumber}")
-    public ResponseEntity<ParkingSpot> parkCarByRegistrationNumber(@RequestParam String registrationNumber, @PathVariable String parkingSpotNumber) {
-        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.parkCar(registrationNumber, parkingSpotNumber));
+    public ResponseEntity<?> parkCarByRegistrationNumber(@RequestParam String registrationNumber, @PathVariable String parkingSpotNumber) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.parkCar(registrationNumber, parkingSpotNumber));
+        } catch (ParkingSpotException | CarException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
+
     @PostMapping
-    public ResponseEntity<ParkingSpot> addNewParkingSpot(@RequestBody ParkingSpot parkingSpot) {
-        parkingSpotService.addNewParkingSpot(parkingSpot);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> addNewParkingSpot(@RequestBody ParkingSpot parkingSpot) {
+        try {
+            parkingSpotService.addNewParkingSpot(parkingSpot);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ParkingSpotAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
+
     @PutMapping("/{parkingSpotNumber}")
     public ResponseEntity<?> removeCarFromParkingSpot(@PathVariable String parkingSpotNumber) {
         try {
@@ -43,5 +57,4 @@ public class ParkingSpotController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
 }

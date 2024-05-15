@@ -1,10 +1,10 @@
 package project.parking.controller;
 
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.parking.exceptions.carExceptions.ExistingRegistrationNumberException;
 import project.parking.model.Car;
 import project.parking.service.CarService;
 
@@ -26,9 +26,13 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(carService.findCarById(id));
     }
     @PostMapping
-    public ResponseEntity<Car> addNewCar(@RequestBody Car carBody) {
-        carService.addNewCar(carBody);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> addNewCar(@RequestBody Car carBody) {
+        try {
+            carService.addNewCar(carBody);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ExistingRegistrationNumberException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
     @PutMapping("/{id}")
     public ResponseEntity<Car> updateCarById(@PathVariable Long id, @RequestBody Car carBody) {

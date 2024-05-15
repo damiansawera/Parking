@@ -1,6 +1,6 @@
-package project.parking.exceptions;
+package project.parking.exceptions.parkingSpotExceptions;
 
-public class ParkingSpotNotOccupiedException extends RuntimeException {
+public class ParkingSpotNotOccupiedException extends ParkingSpotException {
 
     public ParkingSpotNotOccupiedException(String message) {
         super(message);

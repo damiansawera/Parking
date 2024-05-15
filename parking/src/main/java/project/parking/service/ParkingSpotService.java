@@ -3,7 +3,12 @@ package project.parking.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import project.parking.exceptions.ParkingSpotNotOccupiedException;
+import project.parking.exceptions.carExceptions.CarAlreadyParkedException;
+import project.parking.exceptions.carExceptions.CarNotFoundException;
+import project.parking.exceptions.parkingSpotExceptions.ParkingSpotAlreadyExistsException;
+import project.parking.exceptions.parkingSpotExceptions.ParkingSpotAlreadyOccupiedException;
+import project.parking.exceptions.parkingSpotExceptions.ParkingSpotNotFoundException;
+import project.parking.exceptions.parkingSpotExceptions.ParkingSpotNotOccupiedException;
 import project.parking.model.Car;
 import project.parking.model.ParkingSpot;
 import project.parking.repository.CarRepository;
@@ -24,40 +29,75 @@ public class ParkingSpotService {
     }
 
     public ParkingSpot parkCar(String registrationNumber, String parkingSpotNumber) {
-        Optional<Car> car = carRepository.findByRegistrationNumber(registrationNumber);
-        ParkingSpot updatedParkingSpot = null;
-        if (car.isPresent()) {
-            Car updatedCar = car.get();
-            updatedCar.setParkingSpotNumber(parkingSpotNumber);
-            carRepository.save(updatedCar);
-            updatedParkingSpot = parkingSpotRepository.findByNumber(parkingSpotNumber);
-            updatedParkingSpot.setTaken(true);
-            updatedParkingSpot.setRegistrationNumber(registrationNumber);
-            parkingSpotRepository.save(updatedParkingSpot);
+        Optional<Car> optionalCar = carRepository.findByRegistrationNumber(registrationNumber);
+        if (optionalCar.isEmpty()) {
+            throw new CarNotFoundException("Car not found!");
         }
-        return updatedParkingSpot;
+        Car car = optionalCar.get();
+
+        if (isCarAlreadyParked(car)) {
+            throw new CarAlreadyParkedException("Car is already parked!");
+        }
+
+        Optional<ParkingSpot> optionalParkingSpot = parkingSpotRepository.findByNumber(parkingSpotNumber);
+        if (optionalParkingSpot.isEmpty()) {
+            throw new ParkingSpotNotFoundException("Parking spot not found!");
+        }
+        ParkingSpot parkingSpot = optionalParkingSpot.get();
+        if (parkingSpot.isTaken()) {
+            throw new ParkingSpotAlreadyOccupiedException("Parking spot is already occupied!");
+        }
+
+        car.setParkingSpotNumber(parkingSpotNumber);
+        carRepository.save(car);
+
+        parkingSpot.setTaken(true);
+        parkingSpot.setRegistrationNumber(registrationNumber);
+        parkingSpotRepository.save(parkingSpot);
+
+        return parkingSpot;
     }
     public ParkingSpot removeCarFromParkingSpot(String parkingSpotNumber) {
-        ParkingSpot parkingSpot = parkingSpotRepository.findByNumber(parkingSpotNumber);
+        Optional<ParkingSpot> optionalParkingSpot = parkingSpotRepository.findByNumber(parkingSpotNumber);
+        if (optionalParkingSpot.isEmpty()) {
+            throw new ParkingSpotNotFoundException("Parking spot not found!");
+        }
+        ParkingSpot parkingSpot = optionalParkingSpot.get();
         if (!parkingSpot.isTaken()) {
             throw new ParkingSpotNotOccupiedException("Parking spot is not occupied");
-        } else {
+        }
+
             Optional<Car> car = carRepository.findByRegistrationNumber(parkingSpot.getRegistrationNumber());
+        if (car.isEmpty()) {
+            throw new CarNotFoundException("Car not found!");
+        }
+
             Car updatedCar = car.get();
             updatedCar.setParkingSpotNumber(null);
             carRepository.save(updatedCar);
             parkingSpot.setRegistrationNumber(null);
             parkingSpot.setTaken(false);
             parkingSpotRepository.save(parkingSpot);
-        }
         return parkingSpot;
     }
 
     public void addNewParkingSpot(ParkingSpot parkingSpot) {
+        if (doesParkingSpotAlreadyExist(parkingSpot.getNumber())) {
+            throw new ParkingSpotAlreadyExistsException("Parking spot with this number already exists");
+        }
         parkingSpotRepository.save(parkingSpot);
     }
 
     public List<ParkingSpot> findAllParkingSpots() {
         return parkingSpotRepository.findAll();
+    }
+    public boolean doesParkingSpotAlreadyExist(String parkingSpotNumber) {
+        List<ParkingSpot> allParkingSpots = parkingSpotRepository.findAll();
+        return allParkingSpots.stream()
+                .anyMatch(parkingSpot -> parkingSpot.getNumber()
+                        .equals(parkingSpotNumber));
+    }
+    public boolean isCarAlreadyParked(Car car) {
+        return car.getParkingSpotNumber() != null;
     }
 }

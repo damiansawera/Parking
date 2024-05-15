@@ -1,12 +1,9 @@
-package project.parking.exceptions.carExceptions;
+package project.parking.exceptions.parkingSpotExceptions;
 
-public class CarException extends RuntimeException {
+public class ParkingSpotException extends RuntimeException {
 
-    public CarException(String message) {
+    public ParkingSpotException(String message) {
         super(message);
     }
 
-    public CarException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

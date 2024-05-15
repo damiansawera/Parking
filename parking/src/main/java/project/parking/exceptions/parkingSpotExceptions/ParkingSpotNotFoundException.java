@@ -1,8 +1,9 @@
-package project.parking.exceptions.carExceptions;
+package project.parking.exceptions.parkingSpotExceptions;
 
-public class CarNotFoundException extends CarException {
 
-    public CarNotFoundException(String message) {
+public class ParkingSpotNotFoundException extends ParkingSpotException {
+
+    public ParkingSpotNotFoundException(String message) {
         super(message);
     }
 }
