@@ -15,4 +15,7 @@ export class SidebarComponent {
   navigateToSpots() {
     this.router.navigate(['/spots'])
   }
+  navigateToHome() {
+    this.router.navigate([''])
+  }
 }

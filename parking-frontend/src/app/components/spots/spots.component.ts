@@ -1,39 +1,47 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { HomeComponent } from "../home/home.component";
+import { HttpClientModule } from '@angular/common/http';
+import { DataService } from '../../services/data/data.service';
+import { CommonModule } from '@angular/common';
+import { ParkingSpot } from './parking-spot';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+
 
 
 @Component({
     selector: 'app-spots',
     standalone: true,
     templateUrl: './spots.component.html',
-    styleUrl: './spots.component.css',
-    imports: [HomeComponent]
+    styleUrls: ['./spots.component.css'],
+    imports: [
+      HomeComponent,
+      HttpClientModule, 
+      CommonModule,
+      MatPaginatorModule,
+      MatTableModule,
+      ]
 })
-export class SpotsComponent {
-  @Input() spots: any[] = [];
+export class SpotsComponent implements OnInit, AfterViewInit {
+  displayedColumns: string[] = ['Number', 'Floor', 'Taken', 'RegistrationNumber'];
+  dataSource = new MatTableDataSource<ParkingSpot>();
+  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  currentPage: number = 1;
-  spotsPerPage: number = 5;
+  constructor(private dataService: DataService) {}
 
-  get totalPages(): number {
-    return Math.ceil(this.spots.length / this.spotsPerPage)
+  ngOnInit() {
+    this.dataService.fetchData().subscribe({
+      next: (data) => {
+        this.dataSource.data = data;
+        this.dataSource.paginator = this.paginator;
+      },
+      error: (error) => {
+        console.error('Error fetching data:', error);
+      },
+    });
   }
-
-  get pagedSpots(): any[] {
-    const startIndex = (this.currentPage - 1) * this.spotsPerPage;
-    const endIndex = startIndex + this.spotsPerPage;
-    return this.spots.slice(startIndex, endIndex);
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
+ 
+  ngAfterViewInit() {
+}
 }

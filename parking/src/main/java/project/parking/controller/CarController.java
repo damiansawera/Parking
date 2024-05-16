@@ -14,6 +14,7 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/car")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CarController {
     CarService carService;
 

@@ -1,45 +1,37 @@
+<div class="table-container">
+<div class="table-wrapper">
+  <h2 class="table-title">Parking Spots</h2>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Number</th>
-        <th scope="col">Floor</th>
-        <th scope="col">Taken</th>
-        <th scope="col">Registration Number</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td >A1</td>
-        <td>1</td>
-        <td>No</td>
-        <td>ZS672RM</td>
-      </tr>
-      <tr>
-        <td >A2</td>
-        <td>1</td>
-        <td>No</td>
-        <td>ZS672RM</td>
-      </tr>
-      <tr>
-        <td >A3</td>
-        <td>1</td>
-        <td>No</td>
-        <td>ZS672RM</td>
-      </tr>
-      <tr>
-        <td >A3</td>
-        <td>1</td>
-        <td>No</td>
-        <td>ZS672RM</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="pagination">
-    <button [disabled]="currentPage === 1" (click)="prevPage()">Previous</button>
-    <span>{{ currentPage }} / {{ totalPages }}</span>
-    <button [disabled]="currentPage === totalPages" (click)="nextPage()">Next</button>
-  </div>  
-<div class="base-overlay">
-<app-home></app-home>
+  <ng-container matColumnDef="Number">
+    <th mat-header-cell *matHeaderCellDef> Number </th>
+    <td mat-cell *matCellDef="let spots"> {{spots.number}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Floor">
+    <th mat-header-cell *matHeaderCellDef> Floor </th>
+    <td mat-cell *matCellDef="let spots"> {{spots.floor}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="Taken">
+    <th mat-header-cell *matHeaderCellDef> Taken </th>
+    <td mat-cell *matCellDef="let spots"> {{spots.taken}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="RegistrationNumber">
+    <th mat-header-cell *matHeaderCellDef> Resgistration Number </th>
+    <td mat-cell *matCellDef="let spots"> {{spots.registrationNumber}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[10]"
+showFirstLastButtons
+aria-label="Select page">
+</mat-paginator>
 </div>
+</div>
+<div>
+  <app-home></app-home>
+  </div>

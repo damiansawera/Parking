@@ -17,6 +17,7 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/parking-spot")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ParkingSpotController {
     ParkingSpotService parkingSpotService;
 
