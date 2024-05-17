@@ -6,6 +6,10 @@ import { CommonModule } from '@angular/common';
 import { ParkingSpot } from './parking-spot';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { BookPopupComponent } from '../book-popup/book-popup.component';
 
 
 
@@ -20,15 +24,18 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
       CommonModule,
       MatPaginatorModule,
       MatTableModule,
+      MatButtonModule,
+      MatIconModule,
+      MatDialogModule
       ]
 })
-export class SpotsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['Number', 'Floor', 'Taken', 'RegistrationNumber'];
+export class SpotsComponent implements OnInit {
+  displayedColumns: string[] = ['Number', 'Floor', 'Taken', 'RegistrationNumber', 'Actions'];
   dataSource = new MatTableDataSource<ParkingSpot>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.dataService.fetchData().subscribe({
@@ -41,7 +48,23 @@ export class SpotsComponent implements OnInit, AfterViewInit {
       },
     });
   }
- 
-  ngAfterViewInit() {
-}
+
+  openPopup() {
+    this.dialog.open(BookPopupComponent, {
+      width: '60%',
+      height: '400px' 
+    }
+
+    )
+  }
+
+  makeParkingSpotAvailable(spots: ParkingSpot): void {
+    this.dataService.makeParkingSpotAvailable(spots.number, spots.registrationNumber)
+    .subscribe(response => {
+      console.log('Response from server:', response);
+      this.ngOnInit();
+    }, error => {
+    console.error('Error:', error); 
+  });
+  }
 }

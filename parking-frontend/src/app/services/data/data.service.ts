@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ParkingSpot } from '../../components/spots/parking-spot';
@@ -7,11 +7,20 @@ import { ParkingSpot } from '../../components/spots/parking-spot';
   providedIn: 'root'
 })
 export class DataService {
-private apiUrl = 'http://localhost:8080/parking-spot';
+private getAllParkingSpots = 'http://localhost:8080/parking-spot';
+private removeCarFromParkingSpot = 'http://localhost:8080/parking-spot/{id}';
 
   constructor(private http: HttpClient) { }
 
   fetchData(): Observable<ParkingSpot[]> {
-    return this.http.get<ParkingSpot[]>(this.apiUrl);
+    return this.http.get<ParkingSpot[]>(this.getAllParkingSpots);
   }
+
+  makeParkingSpotAvailable(number: string, registrationNumber: string): Observable<ParkingSpot[]> {
+    const url = this.removeCarFromParkingSpot.replace('{id}', number);
+    const params = new HttpParams().set('registrationNumber', registrationNumber);
+
+    return this.http.put<ParkingSpot[]>(url, { registrationNumber }, { params });
+  }
+
 }
