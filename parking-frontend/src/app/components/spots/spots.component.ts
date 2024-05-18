@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HomeComponent } from "../home/home.component";
 import { HttpClientModule } from '@angular/common/http';
-import { DataService } from '../../data.service';
 import { CommonModule } from '@angular/common';
-import { ParkingSpot } from './parking-spot';
+import { ParkingSpot } from '../../models/parking-spot';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BookPopupComponent } from '../book-popup/book-popup.component';
+import { DataService } from '../../services/data-service/data.service';
 
 
 
@@ -51,8 +51,8 @@ export class SpotsComponent implements OnInit {
 
   openPopup() {
     this.dialog.open(BookPopupComponent, {
-      width: '60%',
-      height: '400px' 
+      width: '75%',
+      height: '600px' 
     }
 
     )
