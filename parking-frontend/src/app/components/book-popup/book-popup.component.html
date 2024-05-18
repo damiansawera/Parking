@@ -1,14 +1,14 @@
-<h1 mat-dialog-title>Hi</h1>
 <div mat-dialog-content>
   <mat-form-field>
-    <mat-label>Input</mat-label>
+    <mat-label>Registration Number</mat-label>
     <input matInput>
   </mat-form-field>
-  <mat-form-field>
-    <mat-label>Select</mat-label>
+<mat-form-field>
+    <mat-label>Select Car Brand</mat-label>
     <mat-select>
-      <mat-option value="one">First option</mat-option>
-      <mat-option value="two">Second option</mat-option>
+      <mat-option *ngFor="let brand of carBrands" [value]="brand">
+        {{ brand }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
   <div mat-dialog-actions>

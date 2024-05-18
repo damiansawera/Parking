@@ -1,5 +1,18 @@
-:host {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+mat-card{
+  margin: 50%;
+  text-align: right;
+}
+
+.mat-mdc-form-field {
+  width: 98%;
+  margin: 1%;
+}
+
+.mat-50{
+  width: 48%;
+  margin: 1%;
+}
+
+button{
+  margin: 2px;
+}

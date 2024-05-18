@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HomeComponent } from "../home/home.component";
 import { HttpClientModule } from '@angular/common/http';
-import { DataService } from '../../services/data/data.service';
+import { DataService } from '../../data.service';
 import { CommonModule } from '@angular/common';
 import { ParkingSpot } from './parking-spot';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';

@@ -43,7 +43,7 @@ public class CarService {
             Car updatedCar = car.get();
             updatedCar.setColor(carBody.getColor());
             updatedCar.setProductionYear(carBody.getProductionYear());
-            updatedCar.setVehicleType(carBody.getVehicleType());
+            updatedCar.setVehicleModel(carBody.getVehicleModel());
             updatedCar.setVehicleMake(carBody.getVehicleMake());
             updatedCar.setRegistrationNumber(carBody.getRegistrationNumber());
             carRepository.save(updatedCar);
