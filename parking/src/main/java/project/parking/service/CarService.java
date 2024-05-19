@@ -3,6 +3,7 @@ package project.parking.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.parking.exceptions.carExceptions.CarNotFoundException;
 import project.parking.exceptions.carExceptions.ExistingRegistrationNumberException;
 import project.parking.model.Car;
 import project.parking.repository.CarRepository;
@@ -26,7 +27,19 @@ public class CarService {
     }
 
     public Optional<Car> findCarById(Long id) {
-        return carRepository.findById(id);
+        Optional<Car> car = carRepository.findById(id);
+        if (car.isEmpty()) {
+            throw new CarNotFoundException("Car with ID " + id + " not found");
+        }
+        return car;
+    }
+
+    public Optional<Car> findCarByRegistrationNumber(String registrationNumber) {
+        Optional<Car> car = carRepository.findByRegistrationNumber(registrationNumber);
+        if (car.isEmpty()) {
+            throw new CarNotFoundException("Car with registration number " + registrationNumber + " not found");
+        }
+        return car;
     }
 
     public List<Car> findAll() {
@@ -49,7 +62,7 @@ public class CarService {
             carRepository.save(updatedCar);
             return updatedCar;
         } else {
-            throw new IllegalArgumentException("Car with ID " + id + " not found");
+            throw new CarNotFoundException("Car with ID " + id + " not found");
         }
     }
     public boolean doesRegistrationNumberExist(Car carBody) {

@@ -6,7 +6,7 @@ import { ParkingSpot } from '../../models/parking-spot';
 @Injectable({
   providedIn: 'root'
 })
-export class DataService {
+export class ParkingSpotService {
 private getAllParkingSpots = 'http://localhost:8080/parking-spot';
 private removeCarFromParkingSpot = 'http://localhost:8080/parking-spot/{id}';
 

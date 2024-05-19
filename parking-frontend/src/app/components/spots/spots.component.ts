@@ -9,7 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BookPopupComponent } from '../book-popup/book-popup.component';
-import { DataService } from '../../services/data-service/data.service';
+import { ParkingSpotService } from '../../services/parking-spot-service/parking-spot.service';
 
 
 
@@ -35,7 +35,7 @@ export class SpotsComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private dataService: DataService, private dialog: MatDialog) {}
+  constructor(private dataService: ParkingSpotService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.dataService.fetchData().subscribe({
@@ -51,8 +51,8 @@ export class SpotsComponent implements OnInit {
 
   openPopup() {
     this.dialog.open(BookPopupComponent, {
-      width: '75%',
-      height: '600px' 
+      width: '40%',
+      height: '500px' 
     }
 
     )

@@ -9,14 +9,20 @@ import { Car } from '../../models/car';
 export class CarService {
   private getCarBrandsUrl = 'http://localhost:8080/car-brands';
   private postNewCarUrl = 'http://localhost:8080/car';
+  private getCarByRegistrationNumberUrl = 'http://localhost:8080/car/search';
 
   constructor(private http: HttpClient) { }
 
-  getCarBrands(): Observable<string[]> {
+  getCarMakes(): Observable<string[]> {
     return this.http.get<string[]>(this.getCarBrandsUrl);
   }
 
   saveCar(car: Car): Observable<any> {
     return this.http.post(this.postNewCarUrl, car);
+  }
+
+  getCarByRegistrationNumber(registrationNumber: string): Observable<Car[]> {
+    return this.http.get<Car[]>
+    (this.getCarByRegistrationNumberUrl + '?registrationNumber=' + registrationNumber);
   }
 }
