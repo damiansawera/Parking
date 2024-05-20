@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import { CarService } from '../../services/car-service/car.service';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Car } from '../../models/car';
 import { AddCarPopupComponent } from './add-car-popup/add-car-popup.component';
+import { MatIcon } from '@angular/material/icon';
+import { ParkingSpotService } from '../../services/parking-spot-service/parking-spot.service';
 
 @Component({
   selector: 'app-book-popup',
@@ -20,7 +22,9 @@ import { AddCarPopupComponent } from './add-car-popup/add-car-popup.component';
     MatSelectModule,
     NgFor,
     NgIf,
-    ReactiveFormsModule
+    NgClass,
+    ReactiveFormsModule,
+    MatIcon
   ],
   templateUrl: './book-popup.component.html',
   styleUrl: './book-popup.component.css'
@@ -29,12 +33,16 @@ export class BookPopupComponent implements OnInit {
 
   carMakes: string[] = [];
   form: FormGroup;
+  parkingSpotNumber: string;
 
   constructor(private ref:MatDialogRef<BookPopupComponent>,
     private carService: CarService,
+    private parkingSpotService: ParkingSpotService,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: { parkingSpotNumber: string }
   ) {
+        this.parkingSpotNumber = data.parkingSpotNumber;
         this.form = this.formBuilder.group({
         registrationNumberField: ['', Validators.required],
         vehicleMakeField: ['', Validators.required],
@@ -46,6 +54,11 @@ export class BookPopupComponent implements OnInit {
 
   closePopup() {
     this.ref.close();
+  }
+
+  clearForm() {
+    this.form.reset();
+    this.form.enable();
   }
 
   saveCar() {
@@ -66,28 +79,21 @@ export class BookPopupComponent implements OnInit {
         }
       );
       this.openSuccessPopup();
+      this.checkRegistrationNumber();
     }
   }
 
   openSuccessPopup() {
-    const dialogRef = this.dialog.open(AddCarPopupComponent, {
-      height: '200px',
-      width: '500px'
+    this.dialog.open(AddCarPopupComponent, {
+      height: '150px',
+      width: '450px'
     });
-    dialogRef.afterClosed().subscribe(
-      result => {
-        if (result) {
-          this.closePopup();
-        }
-      }
-    )
   }
 
   checkRegistrationNumber() {
     const registrationNumber = this.form.get('registrationNumberField')?.value;
     if (registrationNumber) {
       this.carService.getCarByRegistrationNumber(registrationNumber).subscribe((data: any) => {
-        console.log('Received data:', data);
         if (data) {
           this.form.patchValue({
             vehicleMakeField: data.vehicleMake,
@@ -95,10 +101,8 @@ export class BookPopupComponent implements OnInit {
             colorField: data.color,
             productionYearField: data.productionYear,
           });
-          console.log('Form patched, now disabling');
           this.form.disable();
         } else {
-          console.log('No data found, enabling form');
           this.form.enable();
         }
       });
@@ -110,6 +114,20 @@ export class BookPopupComponent implements OnInit {
     const valid = /^\d{4}$/.test(value);
     return valid ? null : { productionYear: true };
   }
+
+  bookParkingSpot() {
+    this.parkingSpotService.addCarToParkingSpot(
+      this.parkingSpotNumber,
+      this.form.get('registrationNumberField')?.value).subscribe(
+        response => {
+          console.log('Car parked successfully', response);
+        },
+        error => {
+          console.error('Error while parking car', error);
+        });
+    this.ref.close();
+
+}
 
   ngOnInit() {
     this.carService.getCarMakes()

@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BookPopupComponent } from '../book-popup/book-popup.component';
 import { ParkingSpotService } from '../../services/parking-spot-service/parking-spot.service';
+import { HeaderComponent } from "../header/header.component";
+import { SidebarComponent } from "../sidebar/sidebar.component";
 
 
 
@@ -19,15 +21,17 @@ import { ParkingSpotService } from '../../services/parking-spot-service/parking-
     templateUrl: './spots.component.html',
     styleUrls: ['./spots.component.css'],
     imports: [
-      HomeComponent,
-      HttpClientModule, 
-      CommonModule,
-      MatPaginatorModule,
-      MatTableModule,
-      MatButtonModule,
-      MatIconModule,
-      MatDialogModule
-      ]
+        HomeComponent,
+        HttpClientModule,
+        CommonModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        HeaderComponent,
+        SidebarComponent
+    ]
 })
 export class SpotsComponent implements OnInit {
   displayedColumns: string[] = ['Number', 'Floor', 'Taken', 'RegistrationNumber', 'Actions'];
@@ -35,10 +39,10 @@ export class SpotsComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private dataService: ParkingSpotService, private dialog: MatDialog) {}
+  constructor(private parkingSpotService: ParkingSpotService, private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.dataService.fetchData().subscribe({
+    this.parkingSpotService.fetchData().subscribe({
       next: (data) => {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
@@ -49,17 +53,19 @@ export class SpotsComponent implements OnInit {
     });
   }
 
-  openPopup() {
-    this.dialog.open(BookPopupComponent, {
+  openPopup(parkingSpot: ParkingSpot) {
+    const dialogRef = this.dialog.open(BookPopupComponent, {
       width: '40%',
-      height: '500px' 
-    }
-
-    )
+      height: '500px',
+      data: {parkingSpotNumber: parkingSpot.number }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.ngOnInit();
+    })
   }
 
   makeParkingSpotAvailable(spots: ParkingSpot): void {
-    this.dataService.makeParkingSpotAvailable(spots.number, spots.registrationNumber)
+    this.parkingSpotService.makeParkingSpotAvailable(spots.number)
     .subscribe(response => {
       console.log('Response from server:', response);
       this.ngOnInit();

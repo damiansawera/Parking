@@ -1,16 +1,22 @@
 .home-container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 80px);
     background-color: #f2f6f9;
-    
-    .title {
-        font-size: 20px;
-        font-weight: bold;
-        font-family: monospace;
-        letter-spacing: 1px;
-        position: absolute;
-        top: 20px;
-        left: 50px;
-        color: #838c94;
-    }
+}
+
+.top-sector, .bottom-sector {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.top-sector .title {
+    position: static;
+}
+
+.bottom-sector .title {
+    position: static;
 }

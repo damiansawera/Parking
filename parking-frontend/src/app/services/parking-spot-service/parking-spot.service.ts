@@ -7,20 +7,25 @@ import { ParkingSpot } from '../../models/parking-spot';
   providedIn: 'root'
 })
 export class ParkingSpotService {
-private getAllParkingSpots = 'http://localhost:8080/parking-spot';
-private removeCarFromParkingSpot = 'http://localhost:8080/parking-spot/{id}';
+private getAllParkingSpotsUrl = 'http://localhost:8080/parking-spot';
+private removeCarFromParkingSpotUrl = 'http://localhost:8080/parking-spot/{id}';
+private addCarToParkingSpotUrl = 'http://localhost:8080/parking-spot/add/{id}';
 
   constructor(private http: HttpClient) { }
 
   fetchData(): Observable<ParkingSpot[]> {
-    return this.http.get<ParkingSpot[]>(this.getAllParkingSpots);
+    return this.http.get<ParkingSpot[]>(this.getAllParkingSpotsUrl);
   }
 
-  makeParkingSpotAvailable(number: string, registrationNumber: string): Observable<ParkingSpot[]> {
-    const url = this.removeCarFromParkingSpot.replace('{id}', number);
+  makeParkingSpotAvailable(number: string): Observable<ParkingSpot[]> {
+    const url = this.removeCarFromParkingSpotUrl.replace('{id}', number);
+
+    return this.http.put<ParkingSpot[]>(url, { number });
+  }
+
+  addCarToParkingSpot(number: string, registrationNumber: string): Observable<ParkingSpot[]> {
+    const url = this.addCarToParkingSpotUrl.replace('{id}', number);
     const params = new HttpParams().set('registrationNumber', registrationNumber);
-
-    return this.http.put<ParkingSpot[]>(url, { registrationNumber }, { params });
-  }
-
+    return this.http.put<ParkingSpot[]>(url, { number }, { params });
+    }
 }

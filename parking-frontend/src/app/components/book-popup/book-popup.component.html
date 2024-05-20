@@ -3,6 +3,9 @@
   <mat-form-field appearance="fill" class="form-field">
     <mat-label>Registration Number</mat-label>
     <input matInput formControlName="registrationNumberField" required (focusout)="checkRegistrationNumber()">
+    <button mat-icon-button matSuffix (click)="clearForm()" [disabled]="!form.disabled">
+      <mat-icon>delete</mat-icon>
+    </button>
     <mat-error *ngIf="form.get('registrationNumberField')?.hasError('required')">
     Registration number is required
     </mat-error>
@@ -49,6 +52,9 @@
 </div>
   <div mat-dialog-actions class="dialog-actions">
     <button (click)="closePopup()" mat-raised-button class="close-popup-button">Close</button>
-    <button (click)="saveCar()" mat-raised-button class="add-car-button">Add car</button>
+    <div class="add-book-buttons">
+    <button (click)="saveCar()" [ngClass]="{'disabled': form.disabled}" [disabled]="form.disabled" mat-raised-button class="add-car-button">Add car</button>
+    <button (click)="bookParkingSpot()" [ngClass]="{'disabled': !form.disabled}" [disabled]="!form.disabled" mat-raised-button class="add-car-button" >Book parking</button>
+  </div>
   </div>
 </form>

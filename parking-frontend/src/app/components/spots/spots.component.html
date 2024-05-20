@@ -1,3 +1,5 @@
+<app-header></app-header>
+<app-sidebar></app-sidebar>
 <div class="table-container">
 <div class="table-wrapper">
   <h2 class="table-title">Parking Spots</h2>
@@ -31,7 +33,7 @@
       type="button"
       [ngClass]="{'available-button': !spots.taken, 'not-available-button': spots.taken, 'available-offset': !spots.taken}"
       [disabled]="spots.taken"
-      (click)="!spots.taken ? openPopup() : null">
+      (click)="!spots.taken ? openPopup(spots) : null">
       {{ spots.taken ? 'Not available' : 'Available' }}
     </button>
     <ng-container *ngIf="spots.taken" >
@@ -51,6 +53,3 @@ aria-label="Select page">
 </mat-paginator>
 </div>
 </div>
-<div>
-  <app-home></app-home>
-  </div>

@@ -29,6 +29,11 @@
   margin-top: 10px;
 }
 
+.add-book-buttons {
+  display: flex;
+  gap: 10px;
+  
+}
 .add-car-button {
   background-color: green;
   color: white;
@@ -36,6 +41,12 @@
 
 .add-car-button:hover {
   background-color: darkgreen;
+}
+
+.add-car-button.disabled {
+  background-color: grey;
+  color: lightgrey;
+  cursor: not-allowed;
 }
 
 .close-popup-button {
