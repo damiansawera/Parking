@@ -30,7 +30,7 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findParkingSpotById(id));
     }
 
-    @PostMapping("/{parkingSpotNumber}")
+    @PutMapping("/add/{parkingSpotNumber}")
     public ResponseEntity<?> parkCarByRegistrationNumber(@RequestParam String registrationNumber, @PathVariable String parkingSpotNumber) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.parkCar(registrationNumber, parkingSpotNumber));
