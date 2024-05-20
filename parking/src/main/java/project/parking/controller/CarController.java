@@ -9,7 +9,6 @@ import project.parking.exceptions.carExceptions.ExistingRegistrationNumberExcept
 import project.parking.model.Car;
 import project.parking.service.CarService;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 @RestController
