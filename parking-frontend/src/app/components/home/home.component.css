@@ -9,14 +9,56 @@
 .top-sector, .bottom-sector {
     flex: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
 }
 
-.top-sector .title {
-    position: static;
+.top-sector .title, .bottom-sector .title {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: monospace;
+    letter-spacing: 1px;
+    color: #838c94;
+    margin: 20px 0;
 }
 
-.bottom-sector .title {
-    position: static;
+.car-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.car-card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.car-photo img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.vehicle-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.vehicle-details div {
+    font-size: 14px;
+    color: #333;
 }

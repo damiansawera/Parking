@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Car } from '../../models/car';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { Car } from '../../models/car';
 export class CarService {
   private getCarBrandsUrl = 'http://localhost:8080/car-brands';
   private postNewCarUrl = 'http://localhost:8080/car';
+  private getAllCarsUrl = 'http://localhost:8080/car/all';
   private getCarByRegistrationNumberUrl = 'http://localhost:8080/car/search';
 
   constructor(private http: HttpClient) { }
@@ -21,8 +22,14 @@ export class CarService {
     return this.http.post(this.postNewCarUrl, car);
   }
 
-  getCarByRegistrationNumber(registrationNumber: string): Observable<Car[]> {
-    return this.http.get<Car[]>
+  getCarByRegistrationNumber(registrationNumber: string): Observable<any[]> {
+    return this.http.get<any[]>
     (this.getCarByRegistrationNumberUrl + '?registrationNumber=' + registrationNumber);
+  }
+
+  getParkedCars(): Observable<Car[]> {
+    return this.http.get<Car[]>(this.getAllCarsUrl).pipe(
+      map(cars => cars.filter(car => car.parkingSpotNumber !== null))
+    );
   }
 }
