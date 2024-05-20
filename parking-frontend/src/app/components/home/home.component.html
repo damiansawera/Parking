@@ -2,12 +2,22 @@
 <app-sidebar></app-sidebar>
 <div class="home-container">
     <div class="top-sector">
-        <div class="title">Statistics</div>
+        <div class="title">Parked cars</div>
+        <div class="car-cards-container">
+            <div class="car-card" *ngFor="let parkedCar of parkedCars">
+                <div class="car-photo">
+                    <img [src]="getVehicleImage(parkedCar.vehicleMake)" alt="Car Photo">
+                </div>
+                <div class="vehicle-details">
+                    <div class="vehicle-make">Make: {{ parkedCar.vehicleMake }}</div>
+                    <div class="vehicle-model">Model: {{ parkedCar.vehicleModel }}</div>
+                    <div class="registration-number">Registration: {{ parkedCar.registrationNumber }}</div>
+                    <div class="parking-spot-number">Spot: {{ parkedCar.parkingSpotNumber }}</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="bottom-sector">
-        <div class="title">Cars</div>
-        <div class="car-cards-container">
-            <!-- Angular Material cards will be added here -->
-        </div>
+        <div class="title">Statistics</div>
     </div>
 </div>
