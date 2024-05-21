@@ -25,8 +25,11 @@
 
   <mat-form-field appearance="fill" class="form-field">
     <mat-label>Vehicle Model</mat-label>
-    <input matInput formControlName="vehicleModelField" required maxlength="12" [value]="form.get('vehicleModelField')?.value | upperFirstChar">
-    <mat-error *ngIf="form.get('vehicleModelField')?.hasError('required')">
+    <mat-select formControlName="vehicleMakeField" required>
+      <mat-option *ngFor="let model of carModels" [value]="model">
+        {{ model }}
+      </mat-option>
+    </mat-select> <mat-error *ngIf="form.get('vehicleModelField')?.hasError('required')">
       Vehicle model is required
       </mat-error>
   </mat-form-field>
