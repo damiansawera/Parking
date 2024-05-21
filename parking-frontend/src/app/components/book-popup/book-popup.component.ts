@@ -5,29 +5,32 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import { CarService } from '../../services/car-service/car.service';
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Car } from '../../models/car';
 import { AddCarPopupComponent } from './add-car-popup/add-car-popup.component';
 import { MatIcon } from '@angular/material/icon';
 import { ParkingSpotService } from '../../services/parking-spot-service/parking-spot.service';
+import { BookFormValidator } from '../../validators/book-form-validator';
+import { UpperFirstCharPipe } from '../../pipes/upper-first-char-pipe';
 
 @Component({
-  selector: 'app-book-popup',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    NgFor,
-    NgIf,
-    NgClass,
-    ReactiveFormsModule,
-    MatIcon
-  ],
-  templateUrl: './book-popup.component.html',
-  styleUrl: './book-popup.component.css'
+    selector: 'app-book-popup',
+    standalone: true,
+    templateUrl: './book-popup.component.html',
+    styleUrl: './book-popup.component.css',
+    imports: [
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        NgFor,
+        NgIf,
+        NgClass,
+        ReactiveFormsModule,
+        MatIcon,
+        UpperFirstCharPipe
+    ]
 })
 export class BookPopupComponent implements OnInit {
 
@@ -44,11 +47,27 @@ export class BookPopupComponent implements OnInit {
   ) {
         this.parkingSpotNumber = data.parkingSpotNumber;
         this.form = this.formBuilder.group({
-        registrationNumberField: ['', Validators.required],
-        vehicleMakeField: ['', Validators.required],
-        vehicleModelField: ['', Validators.required],
-        colorField: ['', Validators.required],
-        productionYearField: ['', [Validators.required, this.productionYearValidator]]
+        registrationNumberField: ['',
+        [Validators.required,
+        Validators.maxLength(10)]],
+
+        vehicleMakeField: ['',
+        Validators.required],
+
+        vehicleModelField: ['',
+        [Validators.required,
+        Validators.maxLength(12)]],
+
+        colorField: ['',
+        [Validators.required,
+        Validators.maxLength(12)]],
+        
+        productionYearField: ['',
+        [Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(4),
+        BookFormValidator.productionYearValidator,
+        BookFormValidator.restrictToDigits]]
         })
       }
 
@@ -73,13 +92,13 @@ export class BookPopupComponent implements OnInit {
       this.carService.saveCar(newCar).subscribe(
         response => {
           console.log('Car added successfully', response);
+          
         },
         error => {
           console.error('Error adding car', error);
         }
       );
       this.openSuccessPopup();
-      this.checkRegistrationNumber();
     }
   }
 
@@ -88,7 +107,8 @@ export class BookPopupComponent implements OnInit {
       height: '150px',
       width: '450px'
     });
-  }
+    this.checkRegistrationNumber();
+    }
 
   checkRegistrationNumber() {
     const registrationNumber = this.form.get('registrationNumberField')?.value;
@@ -109,12 +129,6 @@ export class BookPopupComponent implements OnInit {
     }
   }
 
-  productionYearValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    const valid = /^\d{4}$/.test(value);
-    return valid ? null : { productionYear: true };
-  }
-
   bookParkingSpot() {
     this.parkingSpotService.addCarToParkingSpot(
       this.parkingSpotNumber,
@@ -126,13 +140,17 @@ export class BookPopupComponent implements OnInit {
           console.error('Error while parking car', error);
         });
     this.ref.close();
-
 }
 
-  ngOnInit() {
-    this.carService.getCarMakes()
+private loadCarMakes(): void {
+  this.carService.getCarMakes()
     .subscribe((data: string[]) => {
       this.carMakes = data;
-  });
+    });
+}
+
+ngOnInit() {
+  this.loadCarMakes();
 }
 }
+
