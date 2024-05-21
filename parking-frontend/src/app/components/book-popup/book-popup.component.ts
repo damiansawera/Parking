@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import { CarService } from '../../services/car-service/car.service';
-import { NgClass, NgFor, NgIf, UpperCasePipe } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Car } from '../../models/car';
 import { AddCarPopupComponent } from './add-car-popup/add-car-popup.component';
@@ -13,6 +13,11 @@ import { MatIcon } from '@angular/material/icon';
 import { ParkingSpotService } from '../../services/parking-spot-service/parking-spot.service';
 import { BookFormValidator } from '../../validators/book-form-validator';
 import { UpperFirstCharPipe } from '../../pipes/upper-first-char-pipe';
+import { FordModels } from '../../enums/ford-models';
+import { HondaModels } from '../../enums/honda-models';
+import { BmwModels } from '../../enums/bmw-models';
+import { AudiModels } from '../../enums/audi-models';
+import { ToyotaModels } from '../../enums/toyota-models';
 
 @Component({
     selector: 'app-book-popup',
@@ -37,6 +42,7 @@ export class BookPopupComponent implements OnInit {
   carMakes: string[] = [];
   form: FormGroup;
   parkingSpotNumber: string;
+  carModels: any;
 
   constructor(private ref:MatDialogRef<BookPopupComponent>,
     private carService: CarService,
@@ -149,8 +155,47 @@ private loadCarMakes(): void {
     });
 }
 
-ngOnInit() {
-  this.loadCarMakes();
-}
+updateCarModels(make: string) {
+  const allModels = [
+    ...Object.values(FordModels),
+    ...Object.values(HondaModels),
+    ...Object.values(BmwModels),
+    ...Object.values(AudiModels),
+    ...Object.values(ToyotaModels)
+  ];
+
+  if (!make) {
+    this.carModels = allModels;
+  } else {
+    switch (make) {
+      case 'Ford':
+        this.carModels = Object.values(FordModels);
+        break;
+      case 'Honda':
+        this.carModels = Object.values(HondaModels);
+        break;
+        case 'Bmw':
+          this.carModels = Object.values(BmwModels);
+          break;
+        case 'Audi':
+          this.carModels = Object.values(AudiModels);
+          break;
+          
+        case 'Toyota':
+          this.carModels = Object.values(ToyotaModels);
+          break;
+      default:
+        this.carModels = allModels;
+    }
+  }
+  this.form.get('vehicleModelField')?.setValue(null);
 }
 
+ngOnInit() {
+  this.loadCarMakes();
+  this.updateCarModels('');
+  this.form.get('vehicleMakeField')?.valueChanges.subscribe(make => {
+    this.updateCarModels(make);
+});
+}
+}
