@@ -34,7 +34,7 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
     ]
 })
 export class SpotsComponent implements OnInit {
-  displayedColumns: string[] = ['Number', 'Floor', 'Taken', 'RegistrationNumber', 'Actions'];
+  displayedColumns: string[] = ['Number', 'Floor', 'RegistrationNumber', 'Actions'];
   dataSource = new MatTableDataSource<ParkingSpot>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
