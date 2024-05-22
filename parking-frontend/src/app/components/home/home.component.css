@@ -1,9 +1,19 @@
-.home-container {
+.wrapper {
     display: flex;
-    flex-direction: column;
     width: 100%;
     height: calc(100vh - 80px);
     background-color: #f2f6f9;
+}
+
+.home-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: calc(100% - 115px);
+    padding-left: 40px;
+    height: 100%;
+    margin-left: 75px;
+    overflow-y: auto;
 }
 
 .top-sector, .bottom-sector {
@@ -11,7 +21,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .top-sector .title, .bottom-sector .title {
@@ -21,12 +31,14 @@
     letter-spacing: 1px;
     color: #838c94;
     margin: 20px 0;
+    align-self: flex-start;
+    margin-left: 20px;
 }
 
 .car-cards-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     gap: 20px;
     padding: 20px;
@@ -61,4 +73,49 @@
 .vehicle-details div {
     font-size: 14px;
     color: #333;
+}
+
+.statistics-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.statistics-card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    padding: 20px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.statistics-title {
+    font-size: 18px;
+    color: black;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.statistics-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.statistics-cars-parked {
+    font-size: 100px;
+    color: #ab596a;
+    font-weight: bold;
+    line-height: 1;
 }

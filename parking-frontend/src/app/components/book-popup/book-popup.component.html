@@ -13,7 +13,7 @@
 
 <mat-form-field appearance="fill" class="form-field">
     <mat-label>Select Car make</mat-label>
-    <mat-select formControlName="vehicleMakeField" required>
+    <mat-select formControlName="vehicleMakeField" required (ngModelChange)="updateCarModels($event)">
       <mat-option *ngFor="let make of carMakes" [value]="make">
         {{ make }}
       </mat-option>
@@ -25,7 +25,7 @@
 
   <mat-form-field appearance="fill" class="form-field">
     <mat-label>Vehicle Model</mat-label>
-    <mat-select formControlName="vehicleMakeField" required>
+    <mat-select formControlName="vehicleModelField" required>
       <mat-option *ngFor="let model of carModels" [value]="model">
         {{ model }}
       </mat-option>

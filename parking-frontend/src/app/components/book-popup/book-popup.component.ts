@@ -95,10 +95,11 @@ export class BookPopupComponent implements OnInit {
         color: this.form.get('colorField')?.value,
         productionYear: this.form.get('productionYearField')?.value
       };
+
       this.carService.saveCar(newCar).subscribe(
         response => {
           console.log('Car added successfully', response);
-          
+          this.checkRegistrationNumber();
         },
         error => {
           console.error('Error adding car', error);
@@ -113,7 +114,6 @@ export class BookPopupComponent implements OnInit {
       height: '150px',
       width: '450px'
     });
-    this.checkRegistrationNumber();
     }
 
   checkRegistrationNumber() {
@@ -194,8 +194,5 @@ updateCarModels(make: string) {
 ngOnInit() {
   this.loadCarMakes();
   this.updateCarModels('');
-  this.form.get('vehicleMakeField')?.valueChanges.subscribe(make => {
-    this.updateCarModels(make);
-});
 }
 }

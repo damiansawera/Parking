@@ -1,5 +1,6 @@
 <app-header></app-header>
 <app-sidebar></app-sidebar>
+<div class="wrapper">
 <div class="home-container">
     <div class="top-sector">
         <div class="title">Parked cars</div>
@@ -19,5 +20,20 @@
     </div>
     <div class="bottom-sector">
         <div class="title">Statistics</div>
+        <div class="statistics-container">
+            <div class="statistics-card">
+                <div class="statistics-title"> Cars parked </div>
+                <div class="statistics-details">
+                    <div class="statistics-cars-parked"> {{ parkedCars.length }} </div>    
+                </div>
+            </div>
+            <div class="statistics-card">
+                <div class="statistics-title"> Available parking spots </div>
+                <div class="statistics-details">
+                    <div class="statistics-cars-parked"> 27 </div>    
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 </div>
