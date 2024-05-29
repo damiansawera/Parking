@@ -119,3 +119,15 @@
     font-weight: bold;
     line-height: 1;
 }
+
+.statistics-cars-parked-filtered {
+    font-size: 100px;
+    color: #ab596a;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 76px;
+}
+
+.statistics-filter {
+    width: 100%;
+  }

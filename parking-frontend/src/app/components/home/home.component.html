@@ -30,7 +30,20 @@
             <div class="statistics-card">
                 <div class="statistics-title"> Available parking spots </div>
                 <div class="statistics-details">
-                    <div class="statistics-cars-parked"> 27 </div>    
+                    <div class="statistics-cars-parked"> {{ 30 - parkedCars.length }} </div>    
+                </div>
+            </div>
+            <div class="statistics-card">
+                <div class="statistics-title"> Parked cars by make </div>
+                <div class="statistics-filter">
+                    <mat-form-field class="small-select">
+                      <mat-select class="select-car-filter" placeholder="Select Car Make" [(value)]="selectedCarMake" (selectionChange)="filterCarsByMake()">
+                        <mat-option *ngFor="let make of carMakes" [value]="make">{{ make }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                <div class="statistics-details">
+                    <div class="statistics-cars-parked-filtered"> {{ filteredCarCount }}</div>    
                 </div>
             </div>
         </div>
