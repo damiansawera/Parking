@@ -12,8 +12,7 @@ import { BookPopupComponent } from '../book-popup/book-popup.component';
 import { ParkingSpotService } from '../../services/parking-spot-service/parking-spot.service';
 import { HeaderComponent } from "../header/header.component";
 import { SidebarComponent } from "../sidebar/sidebar.component";
-
-
+import { TimeDifferencePipe } from '../../pipes/time-dfference.pipe';
 
 @Component({
     selector: 'app-spots',
@@ -30,11 +29,12 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
         MatIconModule,
         MatDialogModule,
         HeaderComponent,
-        SidebarComponent
+        SidebarComponent,
+        TimeDifferencePipe
     ]
 })
 export class SpotsComponent implements OnInit {
-  displayedColumns: string[] = ['Number', 'Floor', 'RegistrationNumber', 'Actions'];
+  displayedColumns: string[] = ['Number', 'Floor', 'ParkingTime', 'RegistrationNumber',  'Actions'];
   dataSource = new MatTableDataSource<ParkingSpot>();
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;

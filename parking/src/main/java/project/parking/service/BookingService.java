@@ -26,13 +26,27 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
+    public Booking getActiveBooking(String registrationNumber) {
+        List<Booking> bookings = bookingRepository.findByRegistrationNumber(registrationNumber);
+
+        Optional<Booking> activeBooking = bookings
+                .stream()
+                .filter(booking -> !booking.isPaid())
+                .findFirst();
+        if (activeBooking.isEmpty())
+            throw new BookingException("No bookings found for registration number: " + registrationNumber);
+
+        return activeBooking.get();
+    }
+
     public Booking endBooking(String registrationNumber) throws BookingException {
         List<Booking> bookings = bookingRepository.findByRegistrationNumber(registrationNumber);
         if (bookings.isEmpty()) {
             throw new BookingException("No bookings found for registration number: " + registrationNumber);
         }
 
-        Optional<Booking> notPaidBooking = bookings.stream()
+        Optional<Booking> notPaidBooking = bookings
+                .stream()
                 .filter(booking -> !booking.isPaid())
                 .findFirst();
 
