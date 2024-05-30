@@ -3,4 +3,5 @@ export interface ParkingSpot {
     floor: number;
     taken: boolean;
     registrationNumber: string;
+    bookingStartDate: Date;
 }

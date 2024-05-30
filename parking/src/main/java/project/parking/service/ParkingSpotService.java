@@ -58,6 +58,7 @@ public class ParkingSpotService {
 
         parkingSpot.setTaken(true);
         parkingSpot.setRegistrationNumber(registrationNumber);
+        parkingSpot.setBookingStartDate(booking.getBookingStartDate());
         parkingSpotRepository.save(parkingSpot);
 
         return parkingSpot;
@@ -84,6 +85,7 @@ public class ParkingSpotService {
 
             parkingSpot.setRegistrationNumber(null);
             parkingSpot.setTaken(false);
+            parkingSpot.setBookingStartDate(null);
             parkingSpotRepository.save(parkingSpot);
 
         return parkingSpot;

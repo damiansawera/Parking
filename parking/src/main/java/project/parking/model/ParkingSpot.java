@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 @AllArgsConstructor
@@ -21,4 +23,5 @@ public class ParkingSpot {
     private boolean taken;
     @Column(unique = true)
     private String registrationNumber;
+    private Date bookingStartDate;
 }
