@@ -13,6 +13,7 @@ import { ParkingSpotService } from '../../services/parking-spot-service/parking-
 import { HeaderComponent } from "../header/header.component";
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { TimeDifferencePipe } from '../../pipes/time-dfference.pipe';
+import { UnparkCarPopupComponent } from './unpark-car-popup/unpark-car-popup.component';
 
 @Component({
     selector: 'app-spots',
@@ -53,7 +54,7 @@ export class SpotsComponent implements OnInit {
     });
   }
 
-  openPopup(parkingSpot: ParkingSpot) {
+  openAddCarPopup(parkingSpot: ParkingSpot) {
     const dialogRef = this.dialog.open(BookPopupComponent, {
       width: '40%',
       height: '500px',
@@ -64,13 +65,17 @@ export class SpotsComponent implements OnInit {
     })
   }
 
-  makeParkingSpotAvailable(spots: ParkingSpot): void {
-    this.parkingSpotService.makeParkingSpotAvailable(spots.number)
-    .subscribe(response => {
-      console.log('Response from server:', response);
-      this.ngOnInit();
-    }, error => {
-    console.error('Error:', error); 
+  openRemoveCarPopup(parkingSpot: ParkingSpot) {
+    const dialogRef = this.dialog.open(UnparkCarPopupComponent, {
+      width: '25%',
+      height: '200px',
+      data: {
+        parkingSpotNumber: parkingSpot.number,
+        bookingStartDate: parkingSpot.bookingStartDate
+       }
   });
-  }
+  dialogRef.afterClosed().subscribe(result => {
+    this.ngOnInit();
+  })
+}
 }

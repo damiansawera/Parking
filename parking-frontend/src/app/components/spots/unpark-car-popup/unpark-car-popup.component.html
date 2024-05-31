@@ -1,0 +1,8 @@
+<h1>Do you want to unpark your car?</h1>
+<div class="price-container">
+    <h2>Payment due: {{calculatePrice()}}$</h2>
+</div>
+<div class="buttons-container">
+    <button mat-raised-button class="cancel-button" (click)="closePopup()" >Cancel</button>
+    <button mat-raised-button class="success-button" (click)="makeParkingSpotAvailable()" >Pay and go</button>
+</div>

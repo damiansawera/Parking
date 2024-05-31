@@ -33,11 +33,11 @@
       type="button"
       [ngClass]="{'available-button': !spots.taken, 'not-available-button': spots.taken, 'available-offset': !spots.taken}"
       [disabled]="spots.taken"
-      (click)="!spots.taken ? openPopup(spots) : null">
+      (click)="!spots.taken ? openAddCarPopup(spots) : null">
       {{ spots.taken ? 'Not available' : 'Available' }}
     </button>
     <ng-container *ngIf="spots.taken" >
-      <button class="not-available-icon" mat-icon-button aria-label="delete" (click)="makeParkingSpotAvailable(spots)">
+      <button class="not-available-icon" mat-icon-button aria-label="delete" (click)="openRemoveCarPopup(spots)">
         <mat-icon>delete</mat-icon>
       </button>
     </ng-container>
