@@ -1,0 +1,42 @@
+h1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.price-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.success-button {
+    background-color: rgb(58, 187, 46);
+    color: white;
+    width: 40%;
+    margin: 0 30px;
+}
+
+.success-button:hover {
+    background-color: rgb(18, 77, 28);
+    color: white;
+}
+
+.cancel-button {
+    background-color: rgb(121, 121, 121);
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: rgb(66, 66, 66);
+    color: white;
+}
