@@ -30,6 +30,7 @@
     <td mat-cell *matCellDef="let spots" class="actions-column">
       <button 
       mat-raised-button 
+      id="available-button"
       type="button"
       [ngClass]="{'available-button': !spots.taken, 'not-available-button': spots.taken, 'available-offset': !spots.taken}"
       [disabled]="spots.taken"
