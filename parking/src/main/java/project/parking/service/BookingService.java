@@ -29,14 +29,11 @@ public class BookingService {
     public Booking getActiveBooking(String registrationNumber) {
         List<Booking> bookings = bookingRepository.findByRegistrationNumber(registrationNumber);
 
-        Optional<Booking> activeBooking = bookings
+        return bookings
                 .stream()
                 .filter(booking -> !booking.isPaid())
-                .findFirst();
-        if (activeBooking.isEmpty())
-            throw new BookingException("No bookings found for registration number: " + registrationNumber);
-
-        return activeBooking.get();
+                .findFirst()
+                .orElseThrow(() -> new BookingException("No bookings found for registration number: " + registrationNumber));
     }
 
     public Booking endBooking(String registrationNumber) throws BookingException {
@@ -44,20 +41,19 @@ public class BookingService {
         if (bookings.isEmpty()) {
             throw new BookingException("No bookings found for registration number: " + registrationNumber);
         }
+        return endBookingAndPay(registrationNumber, bookings);
+    }
 
-        Optional<Booking> notPaidBooking = bookings
+    private Booking endBookingAndPay(String registrationNumber, List<Booking> bookings) {
+        Booking notPaidBooking = bookings
                 .stream()
                 .filter(booking -> !booking.isPaid())
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new BookingException("No unpaid bookings found for registration number: " + registrationNumber));
 
-        if (notPaidBooking.isEmpty()) {
-            throw new BookingException("No unpaid bookings found for registration number: " + registrationNumber);
-        }
+        notPaidBooking.setBookingEndDate(new Date());
+        notPaidBooking.setPaid(true);
 
-        Booking booking = notPaidBooking.get();
-        booking.setBookingEndDate(new Date());
-        booking.setPaid(true);
-
-        return bookingRepository.save(booking);
+        return bookingRepository.save(notPaidBooking);
     }
 }

@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface CarRepository extends JpaRepository<Car, Long> {
 
     public Optional<Car> findByRegistrationNumber(String registrationNumber);
+    public Boolean existsByRegistrationNumber(String registrationNumber);
+
 }

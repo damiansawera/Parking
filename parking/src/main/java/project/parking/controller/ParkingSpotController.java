@@ -26,36 +26,22 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAllParkingSpots());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<ParkingSpot>> findParkingSpotById(@PathVariable Long id) {
+    public ResponseEntity<ParkingSpot> findParkingSpotById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findParkingSpotById(id));
     }
 
     @PutMapping("/add/{parkingSpotNumber}")
-    public ResponseEntity<?> parkCarByRegistrationNumber(@RequestParam String registrationNumber, @PathVariable String parkingSpotNumber) {
-        try {
+    public ResponseEntity<ParkingSpot> parkCarByRegistrationNumber(@RequestParam String registrationNumber, @PathVariable String parkingSpotNumber) {
             return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.parkCar(registrationNumber, parkingSpotNumber));
-        } catch (ParkingSpotException | CarException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-
     }
 
     @PostMapping
-    public ResponseEntity<?> addNewParkingSpot(@RequestBody ParkingSpot parkingSpot) {
-        try {
-            parkingSpotService.addNewParkingSpot(parkingSpot);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (ParkingSpotAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<ParkingSpot> addNewParkingSpot(@RequestBody ParkingSpot parkingSpot) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.addNewParkingSpot(parkingSpot));
     }
 
     @PutMapping("/{parkingSpotNumber}")
-    public ResponseEntity<?> removeCarFromParkingSpot(@PathVariable String parkingSpotNumber) {
-        try {
+    public ResponseEntity<ParkingSpot> removeCarFromParkingSpot(@PathVariable String parkingSpotNumber) {
             return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.removeCarFromParkingSpot(parkingSpotNumber));
-        } catch (ParkingSpotNotOccupiedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-    }
 }

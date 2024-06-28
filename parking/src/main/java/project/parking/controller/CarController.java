@@ -10,6 +10,7 @@ import project.parking.model.Car;
 import project.parking.service.CarService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -24,31 +25,20 @@ public class CarController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> getCarByRegistrationNumber(@RequestParam String registrationNumber) {
-        try {
+    public ResponseEntity<Car> getCarByRegistrationNumber(@RequestParam String registrationNumber) {
             return ResponseEntity.status(HttpStatus.OK).body(carService.findCarByRegistrationNumber(registrationNumber));
-        } catch (CarNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCarById(@PathVariable Long id) {
-        try {
+    public ResponseEntity<Car> getCarById(@PathVariable Long id) {
             return ResponseEntity.status(HttpStatus.OK).body(carService.findCarById(id));
-        } catch (CarNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
     }
+
     @PostMapping
-    public ResponseEntity<?> addNewCar(@RequestBody Car carBody) {
-        try {
-            carService.addNewCar(carBody);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (ExistingRegistrationNumberException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<Car> addNewCar(@RequestBody Car carBody) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(carService.addNewCar(carBody));
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Car> updateCarById(@PathVariable Long id, @RequestBody Car carBody) {
         return ResponseEntity.status(HttpStatus.OK).body(carService.updateCar(id, carBody));
