@@ -1,5 +1,6 @@
 package project.parking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +30,7 @@ public class Booking {
     private String parkingSpotNumber;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
+    @JsonIgnore
     private Car car;
     private boolean isPaid;
 

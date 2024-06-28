@@ -29,6 +29,7 @@ public class Car {
     private List<Booking> bookings = new ArrayList<>();
 
     public void addBooking(Booking booking) {
-        this.bookings.add(booking);
+        bookings.add(booking);
+        booking.setCar(this);
     }
 }

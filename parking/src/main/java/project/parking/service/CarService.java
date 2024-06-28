@@ -18,28 +18,22 @@ public class CarService {
 
     private final CarRepository carRepository;
 
-    public void addNewCar(Car carBody) {
+    public Car addNewCar(Car carBody) {
         if (doesRegistrationNumberExist(carBody)) {
             throw new ExistingRegistrationNumberException("Car with this registration number already exists");
-        } else {
-        carRepository.save(carBody);
         }
+        return carRepository.save(carBody);
     }
 
-    public Optional<Car> findCarById(Long id) {
-        Optional<Car> car = carRepository.findById(id);
-        if (car.isEmpty()) {
-            throw new CarNotFoundException("Car with ID " + id + " not found");
+    public Car findCarById(Long id) {
+        return carRepository.findById(id)
+                .orElseThrow(() -> new CarNotFoundException("Car with ID" + id +  " not found"));
         }
-        return car;
-    }
 
-    public Optional<Car> findCarByRegistrationNumber(String registrationNumber) {
-        Optional<Car> car = carRepository.findByRegistrationNumber(registrationNumber);
-        if (car.isEmpty()) {
-            throw new CarNotFoundException("Car with registration number " + registrationNumber + " not found");
-        }
-        return car;
+    public Car findCarByRegistrationNumber(String registrationNumber) {
+        return carRepository.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new CarNotFoundException("Car with registration number " + registrationNumber + " not found"));
+
     }
 
     public List<Car> findAll() {
@@ -47,28 +41,28 @@ public class CarService {
     }
 
     public void deleteById(Long id) {
+        if (!carRepository.existsById(id)) {
+            throw new CarNotFoundException("Car with ID " + id + " not found");
+        }
         carRepository.deleteById(id);
     }
 
     public Car updateCar(Long id, Car carBody) {
-        Optional<Car> car = carRepository.findById(id);
-        if (car.isPresent() && !doesRegistrationNumberExist(carBody)) {
-            Car updatedCar = car.get();
-            updatedCar.setColor(carBody.getColor());
-            updatedCar.setProductionYear(carBody.getProductionYear());
-            updatedCar.setVehicleModel(carBody.getVehicleModel());
-            updatedCar.setVehicleMake(carBody.getVehicleMake());
-            updatedCar.setRegistrationNumber(carBody.getRegistrationNumber());
-            carRepository.save(updatedCar);
-            return updatedCar;
-        } else {
-            throw new CarNotFoundException("Car with ID " + id + " not found");
+        Car car = carRepository.findById(id)
+                .orElseThrow(() -> new CarNotFoundException("Car with ID " + id + " not found"));
+        
+        if (doesRegistrationNumberExist(carBody)) {
+            car.setColor(carBody.getColor());
+            car.setProductionYear(carBody.getProductionYear());
+            car.setVehicleModel(carBody.getVehicleModel());
+            car.setVehicleMake(carBody.getVehicleMake());
+            car.setRegistrationNumber(carBody.getRegistrationNumber());
+            carRepository.save(car);
         }
+        return car;
     }
+
     public boolean doesRegistrationNumberExist(Car carBody) {
-        List<Car> allCars = carRepository.findAll();
-        return allCars.stream()
-                        .anyMatch(car -> car.getRegistrationNumber()
-                        .equals(carBody.getRegistrationNumber()));
+        return carRepository.existsByRegistrationNumber(carBody.getRegistrationNumber());
     }
 }
