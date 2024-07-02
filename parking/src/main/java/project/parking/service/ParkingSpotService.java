@@ -3,6 +3,7 @@ package project.parking.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.parking.DTOs.ParkingSpotDTO;
 import project.parking.exceptions.bookingExceptions.BookingException;
 import project.parking.exceptions.carExceptions.CarAlreadyParkedException;
 import project.parking.exceptions.carExceptions.CarNotFoundException;
@@ -10,6 +11,7 @@ import project.parking.exceptions.parkingSpotExceptions.ParkingSpotAlreadyExists
 import project.parking.exceptions.parkingSpotExceptions.ParkingSpotAlreadyOccupiedException;
 import project.parking.exceptions.parkingSpotExceptions.ParkingSpotNotFoundException;
 import project.parking.exceptions.parkingSpotExceptions.ParkingSpotNotOccupiedException;
+import project.parking.mapper.ParkingSpotMapper;
 import project.parking.model.Booking;
 import project.parking.model.Car;
 import project.parking.model.ParkingSpot;
@@ -17,6 +19,7 @@ import project.parking.repository.CarRepository;
 import project.parking.repository.ParkingSpotRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,13 +28,14 @@ public class ParkingSpotService {
     private final ParkingSpotRepository parkingSpotRepository;
     private final CarRepository carRepository;
     private BookingService bookingService;
+    private ParkingSpotMapper parkingSpotMapper;
 
-    public ParkingSpot findParkingSpotById(Long id) {
-
-        return parkingSpotRepository.findById(id).orElseThrow(() -> new ParkingSpotNotFoundException("Parking spot not found!"));
+    public ParkingSpotDTO findParkingSpotById(Long id) {
+        return parkingSpotMapper.parkingSpotToParkingSpotDTO
+                (parkingSpotRepository.findById(id).orElseThrow(() -> new ParkingSpotNotFoundException("Parking spot not found!")));
     }
 
-    public ParkingSpot parkCar(String registrationNumber, String parkingSpotNumber) {
+    public ParkingSpotDTO parkCar(String registrationNumber, String parkingSpotNumber) {
         Car car = carRepository.findByRegistrationNumber(registrationNumber)
                 .orElseThrow(() -> new CarNotFoundException("Car not found!"));
 
@@ -46,14 +50,14 @@ public class ParkingSpotService {
             throw new ParkingSpotAlreadyOccupiedException("Parking spot is already occupied!");
         }
 
-        Booking booking = bookingService.createBooking(registrationNumber, parkingSpotNumber);
+        Booking booking = bookingService.createAndLinkBooking(car, parkingSpot.getNumber());
         updateCarWithBooking(car, parkingSpotNumber, booking);
         updateParkingSpotWithCar(parkingSpot, registrationNumber, booking);
 
-        return parkingSpotRepository.save(parkingSpot);
+        return parkingSpotMapper.parkingSpotToParkingSpotDTO(parkingSpotRepository.save(parkingSpot));
     }
 
-    public ParkingSpot removeCarFromParkingSpot(String parkingSpotNumber) throws BookingException {
+    public ParkingSpotDTO removeCarFromParkingSpot(String parkingSpotNumber) throws BookingException {
         ParkingSpot parkingSpot = parkingSpotRepository.findByNumber(parkingSpotNumber)
                 .orElseThrow(() -> new ParkingSpotNotFoundException("Parking spot not found!"));
 
@@ -69,7 +73,7 @@ public class ParkingSpotService {
         resetCarParkingState(car);
         resetParkingSpotState(parkingSpot);
 
-        return parkingSpotRepository.save(parkingSpot);
+        return parkingSpotMapper.parkingSpotToParkingSpotDTO(parkingSpotRepository.save(parkingSpot));
     }
 
     private void resetParkingSpotState(ParkingSpot parkingSpot) {
@@ -78,15 +82,17 @@ public class ParkingSpotService {
         parkingSpot.setBookingStartDate(null);
     }
 
-    public ParkingSpot addNewParkingSpot(ParkingSpot parkingSpot) {
+    public ParkingSpotDTO addNewParkingSpot(ParkingSpot parkingSpot) {
         if (doesParkingSpotAlreadyExist(parkingSpot.getNumber())) {
             throw new ParkingSpotAlreadyExistsException("Parking spot with this number already exists");
         }
-        return parkingSpotRepository.save(parkingSpot);
+        return parkingSpotMapper.parkingSpotToParkingSpotDTO(parkingSpotRepository.save(parkingSpot));
     }
 
-    public List<ParkingSpot> findAllParkingSpots() {
-        return parkingSpotRepository.findAll();
+    public List<ParkingSpotDTO> findAllParkingSpots() {
+        return parkingSpotRepository.findAll().stream()
+                .map(parkingSpotMapper::parkingSpotToParkingSpotDTO)
+                .collect(Collectors.toList());
     }
 
     public boolean doesParkingSpotAlreadyExist(String parkingSpotNumber) {

@@ -17,10 +17,8 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Transient
     private final int PRICE_PER_HOUR = 5;
-
     private int price;
     private Date bookingStartDate;
     private Date bookingEndDate;

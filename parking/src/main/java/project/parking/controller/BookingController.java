@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.parking.model.Booking;
+import project.parking.DTOs.BookingDTO;
 import project.parking.service.BookingService;
 
 import java.util.List;
@@ -17,22 +17,22 @@ public class BookingController {
     BookingService bookingService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Booking>> getAllBookings() {
+    public ResponseEntity<List<BookingDTO>> getAllBookings() {
         return ResponseEntity.status(HttpStatus.OK).body(bookingService.getAllBookings());
     }
 
     @GetMapping("/{registrationNumber}")
-    public ResponseEntity<Booking> getActiveBooking(@RequestParam String registrationNumber) {
+    public ResponseEntity<BookingDTO> getActiveBooking(@PathVariable String registrationNumber) {
         return ResponseEntity.status(HttpStatus.OK).body(bookingService.getActiveBooking(registrationNumber));
     }
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestParam String registrationNumber, @RequestParam String parkingSpotNumber) {
+    public ResponseEntity<BookingDTO> createBooking(@RequestParam String registrationNumber, @RequestParam String parkingSpotNumber) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(registrationNumber, parkingSpotNumber));
     }
 
     @PutMapping("/{registrationNumber}/end")
-    public ResponseEntity<Booking> endBooking(@PathVariable String registrationNumber) throws Exception {
+    public ResponseEntity<BookingDTO> endBooking(@PathVariable String registrationNumber) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(bookingService.endBooking(registrationNumber));
     }
 

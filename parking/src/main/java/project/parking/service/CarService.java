@@ -3,13 +3,15 @@ package project.parking.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.parking.DTOs.CarDTO;
 import project.parking.exceptions.carExceptions.CarNotFoundException;
 import project.parking.exceptions.carExceptions.ExistingRegistrationNumberException;
+import project.parking.mapper.CarMapper;
 import project.parking.model.Car;
 import project.parking.repository.CarRepository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -17,27 +19,31 @@ import java.util.Optional;
 public class CarService {
 
     private final CarRepository carRepository;
+    private final CarMapper carMapper;
 
-    public Car addNewCar(Car carBody) {
-        if (doesRegistrationNumberExist(carBody)) {
+    public CarDTO addNewCar(CarDTO carDTO) {
+        if (doesRegistrationNumberExist(carDTO)) {
             throw new ExistingRegistrationNumberException("Car with this registration number already exists");
         }
-        return carRepository.save(carBody);
+        Car car = carMapper.carDTOToCar(carDTO);
+        return carMapper.carToCarDTO(carRepository.save(car));
     }
 
-    public Car findCarById(Long id) {
-        return carRepository.findById(id)
-                .orElseThrow(() -> new CarNotFoundException("Car with ID" + id +  " not found"));
+    public CarDTO findCarById(Long id) {
+        return carMapper.carToCarDTO(carRepository.findById(id)
+                .orElseThrow(() -> new CarNotFoundException("Car with ID" + id +  " not found")));
         }
 
-    public Car findCarByRegistrationNumber(String registrationNumber) {
-        return carRepository.findByRegistrationNumber(registrationNumber)
-                .orElseThrow(() -> new CarNotFoundException("Car with registration number " + registrationNumber + " not found"));
-
+    public CarDTO findCarByRegistrationNumber(String registrationNumber) {
+        return carMapper.carToCarDTO(carRepository.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new CarNotFoundException("Car with registration number " + registrationNumber + " not found")));
     }
 
-    public List<Car> findAll() {
-        return carRepository.findAll();
+    public List<CarDTO> findAll() {
+        return carRepository.findAll()
+                .stream()
+                .map(carMapper::carToCarDTO)
+                .collect(Collectors.toList());
     }
 
     public void deleteById(Long id) {
@@ -47,22 +53,22 @@ public class CarService {
         carRepository.deleteById(id);
     }
 
-    public Car updateCar(Long id, Car carBody) {
+    public CarDTO updateCar(Long id, CarDTO carDTO) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new CarNotFoundException("Car with ID " + id + " not found"));
         
-        if (doesRegistrationNumberExist(carBody)) {
-            car.setColor(carBody.getColor());
-            car.setProductionYear(carBody.getProductionYear());
-            car.setVehicleModel(carBody.getVehicleModel());
-            car.setVehicleMake(carBody.getVehicleMake());
-            car.setRegistrationNumber(carBody.getRegistrationNumber());
+        if (doesRegistrationNumberExist(carDTO)) {
+            car.setColor(carDTO.getColor());
+            car.setProductionYear(carDTO.getProductionYear());
+            car.setVehicleModel(carDTO.getVehicleModel());
+            car.setVehicleMake(carDTO.getVehicleMake());
+            car.setRegistrationNumber(carDTO.getRegistrationNumber());
             carRepository.save(car);
         }
-        return car;
+        return carMapper.carToCarDTO(car);
     }
 
-    public boolean doesRegistrationNumberExist(Car carBody) {
-        return carRepository.existsByRegistrationNumber(carBody.getRegistrationNumber());
+    public boolean doesRegistrationNumberExist(CarDTO carDTO) {
+        return carRepository.existsByRegistrationNumber(carDTO.getRegistrationNumber());
     }
 }
