@@ -29,7 +29,7 @@ public class Car {
     private List<Booking> bookings = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity userEntity;
 
     public void addBooking(Booking booking) {
         bookings.add(booking);
