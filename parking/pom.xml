@@ -97,7 +97,6 @@
 								<version>0.2.0</version>
 						</path>
 					</annotationProcessorPaths>
-					<generatedSourcesDirectory>${project.basedir}/target/generated-sources/annotations</generatedSourcesDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
