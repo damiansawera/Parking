@@ -1,3 +1,10 @@
 <div class="header-container">
+    <div *ngIf="!isLoggedIn">
+    <button class="login-button" mat-raised-button (click)="redirectToLogin()">LOGIN</button>
+    </div>
+    <div *ngIf="isLoggedIn">
+        <button class = "logout-button" mat-raised-button (click)="logout()">LOGOUT</button>
+        <button class = "my-account-button" mat-raised-button>My Account</button>
+      </div>
     <div class="title">Parking System</div>
-</div>
+    </div>

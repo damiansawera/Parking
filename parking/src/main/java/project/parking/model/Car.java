@@ -27,6 +27,9 @@ public class Car {
     private String parkingSpotNumber;
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     public void addBooking(Booking booking) {
         bookings.add(booking);
