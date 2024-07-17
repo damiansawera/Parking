@@ -1,21 +1,16 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
-import { AuthInterceptor } from './interceptor/AuthInterceptor';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { authInterceptor } from './interceptor/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes),
-              provideAnimationsAsync('noop'),
-              provideHttpClient(),
-              provideAnimationsAsync('noop'),
-              provideAnimationsAsync(),
-              provideAnimationsAsync(),
-              provideAnimationsAsync(),
-              provideAnimationsAsync(),
-              importProvidersFrom(FormsModule),
-              { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
+  providers: [
+    provideRouter(routes),
+    provideAnimationsAsync('noop'),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    importProvidersFrom(FormsModule)
+  ]
 };

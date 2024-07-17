@@ -6,23 +6,36 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtGenerator {
-    public static final long JWT_EXPIRATION = 700000;
+    public static final long JWT_EXPIRATION = 600000;
+    public static final long JWT_REFRESH_EXPIRATION = 100000000;
     public static final String JWT_SECRET = "Secret";
 
     public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+        return generateToken(authentication.getName(), JWT_EXPIRATION, authentication.getAuthorities());
+    }
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(userDetails.getUsername(), JWT_EXPIRATION, userDetails.getAuthorities());
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+        return generateToken(authentication.getName(), JWT_REFRESH_EXPIRATION, authentication.getAuthorities());
+    }
+
+    public String generateToken(String username, long expiration, Collection<? extends GrantedAuthority> authorities) {
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + JWT_EXPIRATION);
+        Date expireDate = new Date(currentDate.getTime() + expiration);
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("roles", authentication.getAuthorities().stream()
+        claims.put("roles", authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
 

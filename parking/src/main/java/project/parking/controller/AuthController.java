@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
-import project.parking.DTOs.AuthResponseDTO;
-import project.parking.DTOs.UserDTO;
-import project.parking.DTOs.UserLoginDTO;
-import project.parking.DTOs.UserRegistrationDTO;
+import project.parking.DTOs.*;
 import project.parking.config.JwtGenerator;
 import project.parking.service.AuthService;
 
@@ -27,6 +24,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginDTO userLoginDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.loginUser(userLoginDTO));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.refreshToken(refreshTokenRequest));
     }
 
 }
