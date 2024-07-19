@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { ParkingSpotService } from '../../../services/parking-spot-service/parking-spot.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -39,7 +39,7 @@ bookingStartDate: Date | null | undefined;
     return price;
   }
 
-  makeParkingSpotAvailable(): void {
+  finishParking(): void {
     this.parkingSpotService.makeParkingSpotAvailable(this.parkingSpotNumber)
     .subscribe(response => {
       console.log('Response from server:', response);

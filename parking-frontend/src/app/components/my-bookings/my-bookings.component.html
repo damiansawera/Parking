@@ -1,0 +1,46 @@
+<app-header></app-header>
+<app-sidebar></app-sidebar>
+<div class="wrapper">
+    <div class="bookings-container">
+    
+      <div class="bookings-section current-bookings">
+        <h2 class="section-title">Current Bookings</h2>
+        <div class="bookings-list">
+          <div *ngFor="let booking of currentBookings" class="booking-card">
+            <div class="booking-details">
+              <div class="registration-number">{{booking.registrationNumber}}</div>
+              <div class="parking-spot">Spot: {{booking.parkingSpotNumber}}</div>
+              <div class="date-range">
+                {{booking.bookingStartDate | date:'short'}} - 
+                {{booking.bookingEndDate ? (booking.bookingEndDate | date:'short') : 'Ongoing'}}
+              </div>
+              <div class="price">{{booking.price | currency:'PLN ':'symbol':'1.2-2'}}</div>
+              <div class="payment-status" [ngClass]="{'paid': booking.paid, 'unpaid': !booking.paid}">
+                {{booking.paid ? 'Paid' : 'Unpaid'}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="bookings-section past-bookings">
+        <h2 class="section-title">Past Bookings</h2>
+        <div class="bookings-list">
+          <div *ngFor="let booking of pastBookings" class="booking-card">
+            <div class="booking-details">
+              <div class="registration-number">{{booking.registrationNumber}}</div>
+              <div class="parking-spot">Spot: {{booking.parkingSpotNumber}}</div>
+              <div class="date-range">
+                {{booking.bookingStartDate | date:'short'}} - 
+                {{booking.bookingEndDate | date:'short'}}
+              </div>
+              <div class="price">{{booking.price | currency:'PLN ':'symbol':'1.2-2'}}</div>
+              <div class="payment-status" [ngClass]="{'paid': booking.paid, 'unpaid': !booking.paid}">
+                {{booking.paid ? 'Paid' : 'Unpaid'}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -30,12 +30,16 @@ public class Booking {
     @JoinColumn(name = "car_id")
     @JsonIgnore
     private Car car;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
     private boolean isPaid;
 
-    public Booking(String registrationNumber, String parkingSpotNumber) {
+    public Booking(String registrationNumber, String parkingSpotNumber, UserEntity userEntity) {
         this.bookingStartDate = new Date();
         this.registrationNumber = registrationNumber;
         this.parkingSpotNumber = parkingSpotNumber;
+        this.userEntity = userEntity;
         this.isPaid = false;
     }
 

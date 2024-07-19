@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { LoginComponent } from "../../login/login.component";
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { NgIf } from '@angular/common';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +26,10 @@ export class HeaderComponent {
 
   redirectToLogin(): void {
     this.router.navigate(['/login']);
+  }
+
+  redirectToRegister(): void {
+    this.router.navigate(['/register']);
   }
   
   logout(): void {

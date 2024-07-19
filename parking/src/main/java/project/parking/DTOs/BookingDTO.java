@@ -23,5 +23,4 @@ public class BookingDTO {
         @NotNull
         private String parkingSpotNumber;
         private boolean isPaid;
-
 }

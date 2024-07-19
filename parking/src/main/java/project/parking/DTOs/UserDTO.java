@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import project.parking.model.Booking;
 import project.parking.model.Car;
 
+import java.awt.print.Book;
 import java.util.List;
 
 @Data
@@ -15,4 +16,5 @@ import java.util.List;
 public class UserDTO {
         private String username;
         private List<Car> cars;
+        private List<Booking> bookings;
     }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.parking.model.Booking;
+import project.parking.model.UserEntity;
 
 import java.util.List;
 
@@ -23,5 +24,4 @@ public class CarDTO {
         @NotNull
         private String registrationNumber;
         private String parkingSpotNumber;
-        private List<Booking> bookings;
     }

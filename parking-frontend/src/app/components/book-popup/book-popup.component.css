@@ -1,59 +1,102 @@
-.car-form {
+.car-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+}
+
+.car-card {
+  background-color: #fff;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.form-content {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  width: 80%;
+.car-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
-.form-field {
-  flex: 1 1 calc(50% - 15px);
-  min-width: 200px;
+.car-card.selected {
+  border-color: #00b894;
+  box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.3);
 }
 
-.mat-form-field {
-  width: 100%;
+.car-photo img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.vehicle-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.vehicle-details div {
+    font-size: 14px;
+    color: #333;
 }
 
 .dialog-actions {
-  display: flex;
-  justify-content: space-between;
-  width: 80%;
-  margin-top: 10px;
-}
-
-.add-book-buttons {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+    padding: 0 20px;
+  }
   
-}
-.add-car-button {
-  background-color: green;
-  color: white;
-}
+  .right-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .close-button {
+    background-color: #ce213e;
+    color: white;
+    transition: all 0.3s ease;
+  }
+  
+  .add-car-button, .book-parking-button {
+    background-color: #00b894 !important;
+    color: white !important;
+    transition: all 0.3s ease;
+  }
+  
+  .add-car-button.disabled {
+    background-color: #f5f5f5 !important;
+    color: #a0a0a0 !important;
+    cursor: not-allowed !important;
+  }
 
-.add-car-button:hover {
-  background-color: darkgreen;
-}
-
-.add-car-button.disabled {
-  background-color: grey;
-  color: lightgrey;
-  cursor: not-allowed;
-}
-
-.close-popup-button {
-  background-color: #ce213e;
-  color: white;
-}
-
-.close-popup-button:hover {
-  background-color: darkred;
-}
+  .book-parking-button {
+    background-color: #f5f5f5 !important;
+    color: #a0a0a0 !important;
+    cursor: not-allowed !important;
+    transition: all 0.3s ease;
+  }
+  
+  .book-parking-button:not([disabled]) {
+    background-color: #00b894 !important;
+    color: white !important;
+    cursor: pointer !important;
+  }
+  
+  button:not(:disabled):hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
