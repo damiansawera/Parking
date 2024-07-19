@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private loginUrl = 'http://localhost:8080/auth/login';
+  private registerUrl = 'http://localhost:8080/auth/register';
   private refreshUrl = 'http://localhost:8080/auth/refresh';
   private tokenRefreshInterval = 300000;
 
@@ -36,6 +37,18 @@ export class AuthService {
           return of(error);
         })
       );
+  }
+
+  register(username: string, password: string, email: string) {
+    return this.http.post(this.registerUrl, {username, password, email}, {observe: 'response' })
+    .pipe(
+      tap(() => {this.router.navigate(['/']);
+  }),
+  catchError(error => {
+    console.error('Registration failed', error);
+    return of(error);
+  })
+);
   }
 
   refreshToken(): Observable<any> {
