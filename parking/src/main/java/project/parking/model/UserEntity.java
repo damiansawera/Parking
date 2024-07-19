@@ -24,6 +24,8 @@ public class UserEntity {
     private String email;
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Car> cars;
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Booking> bookings;
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 

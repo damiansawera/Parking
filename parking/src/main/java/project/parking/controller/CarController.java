@@ -3,8 +3,12 @@ package project.parking.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import project.parking.DTOs.BookingDTO;
 import project.parking.DTOs.CarDTO;
+import project.parking.model.Car;
 import project.parking.service.CarService;
 
 import java.util.List;
@@ -46,5 +50,10 @@ public class CarController {
     public ResponseEntity<Void> deleteCarById(@PathVariable Long id) {
         carService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<CarDTO>> getUserCars(@AuthenticationPrincipal User user) {
+        return ResponseEntity.status(HttpStatus.OK).body(carService.getAllCarsByUser(user));
     }
 }

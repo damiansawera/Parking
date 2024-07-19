@@ -10,6 +10,7 @@ export class CarService {
   private getCarBrandsUrl = 'http://localhost:8080/car-brands';
   private postNewCarUrl = 'http://localhost:8080/car';
   private getAllCarsUrl = 'http://localhost:8080/car/all';
+  private getAllUserCarsUrl = 'http://localhost:8080/car/user';
   private getCarByRegistrationNumberUrl = 'http://localhost:8080/car/search';
 
   constructor(private http: HttpClient) { }
@@ -32,4 +33,9 @@ export class CarService {
       map(cars => cars.filter(car => car.parkingSpotNumber !== null))
     );
   }
+
+  getAllUserCars(): Observable<Car[]> {
+    return this.http.get<Car[]>(this.getAllUserCarsUrl);
+  }
+
 }

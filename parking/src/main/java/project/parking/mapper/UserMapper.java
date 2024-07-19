@@ -7,6 +7,5 @@ import project.parking.model.UserEntity;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    UserEntity userRegistrationDTOToUser(UserRegistrationDTO userRegistrationDTO);
     UserDTO userToUserDTO(UserEntity userEntity);
 }

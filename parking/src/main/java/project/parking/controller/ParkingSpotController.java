@@ -17,7 +17,7 @@ import java.util.List;
 public class ParkingSpotController {
     ParkingSpotService parkingSpotService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ParkingSpotDTO>> findAllParkingSpots() {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAllParkingSpots());
     }

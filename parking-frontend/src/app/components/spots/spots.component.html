@@ -1,55 +1,63 @@
-<app-header></app-header>
-<app-sidebar></app-sidebar>
-<div class="table-container">
-<div class="table-wrapper">
-  <h2 class="table-title">Parking Spots</h2>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<div class="wrapper">
+  <app-sidebar></app-sidebar>
+  <div class="content-container">
+    <app-header></app-header>
+    <div class="parking-spots-section">
+      <h2 class="section-title">Parking Spots</h2>
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <ng-container matColumnDef="Number">
+            <th mat-header-cell *matHeaderCellDef> Number </th>
+            <td mat-cell *matCellDef="let spots"> {{spots.number}} </td>
+          </ng-container>
 
-  <ng-container matColumnDef="Number">
-    <th mat-header-cell *matHeaderCellDef> Number </th>
-    <td mat-cell *matCellDef="let spots"> {{spots.number}} </td>
-  </ng-container>
+          <ng-container matColumnDef="Floor">
+            <th mat-header-cell *matHeaderCellDef> Floor </th>
+            <td mat-cell *matCellDef="let spots"> {{spots.floor}} </td>
+          </ng-container>
 
-  <ng-container matColumnDef="Floor">
-    <th mat-header-cell *matHeaderCellDef> Floor </th>
-    <td mat-cell *matCellDef="let spots"> {{spots.floor}} </td>
-  </ng-container>
+          <ng-container matColumnDef="ParkingTime">
+            <th mat-header-cell *matHeaderCellDef> Parking Time </th>
+            <td mat-cell *matCellDef="let spots"> {{spots.bookingStartDate | timeDifference}} </td>
+          </ng-container>
 
-  <ng-container matColumnDef="ParkingTime">
-    <th mat-header-cell *matHeaderCellDef> Parking Time </th>
-    <td mat-cell *matCellDef="let spots"> {{spots.bookingStartDate | timeDifference}} </td>
-  </ng-container>
+          <ng-container matColumnDef="RegistrationNumber">
+            <th mat-header-cell *matHeaderCellDef> Registration Number </th>
+            <td mat-cell *matCellDef="let spots"> {{spots.registrationNumber}} </td>
+          </ng-container>
 
-  <ng-container matColumnDef="RegistrationNumber">
-    <th mat-header-cell *matHeaderCellDef> Registration Number </th>
-    <td mat-cell *matCellDef="let spots"> {{spots.registrationNumber}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="Actions">
-    <th mat-header-cell *matHeaderCellDef class="actions-column"> </th>
-    <td mat-cell *matCellDef="let spots" class="actions-column">
-      <button 
-      mat-raised-button 
-      type="button"
-      [ngClass]="{'available-button': !spots.taken, 'not-available-button': spots.taken, 'available-offset': !spots.taken}"
-      [disabled]="spots.taken"
-      (click)="!spots.taken ? openAddCarPopup(spots) : null">
-      {{ spots.taken ? 'Not available' : 'Available' }}
-    </button>
-    <ng-container *ngIf="spots.taken" >
-      <button class="not-available-icon" mat-icon-button aria-label="delete" (click)="openRemoveCarPopup(spots)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </ng-container>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-<mat-paginator [pageSizeOptions]="[10]"
-showFirstLastButtons
-aria-label="Select page">
-</mat-paginator>
-</div>
+          <ng-container matColumnDef="Actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-column"> Actions </th>
+            <td mat-cell *matCellDef="let spots" class="actions-column">
+              <ng-container *ngIf="(isLoggedIn$ | async) === true; else notLoggedIn">
+                <button 
+                  mat-raised-button
+                  type="button"
+                  [ngClass]="{'available-button': !spots.taken, 'finish-parking-button': spots.taken}"
+                  (click)="spots.taken ? finishParkingPopup(spots) : onAvailableClick(spots)">
+                  {{ spots.taken ? 'Finish Parking' : 'Available' }}
+                </button>
+              </ng-container>
+              <ng-template #notLoggedIn>
+                <button 
+                  mat-raised-button
+                  type="button"
+                  [ngClass]="{'not-available-button': spots.taken, 'disabled-button': !spots.taken}"
+                  disabled>
+                  {{ spots.taken ? 'Not available' : 'Available' }}
+                </button>
+              </ng-template>
+            </td>
+          </ng-container>
+          
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50]"
+          showFirstLastButtons
+          aria-label="Select page of parking spots">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
 </div>

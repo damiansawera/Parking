@@ -2,6 +2,9 @@ package project.parking.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.parking.DTOs.ParkingSpotDTO;
 import project.parking.exceptions.bookingExceptions.BookingException;
@@ -15,8 +18,10 @@ import project.parking.mapper.ParkingSpotMapper;
 import project.parking.model.Booking;
 import project.parking.model.Car;
 import project.parking.model.ParkingSpot;
+import project.parking.model.UserEntity;
 import project.parking.repository.CarRepository;
 import project.parking.repository.ParkingSpotRepository;
+import project.parking.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +32,7 @@ import java.util.stream.Collectors;
 public class ParkingSpotService {
     private final ParkingSpotRepository parkingSpotRepository;
     private final CarRepository carRepository;
+    private final UserRepository userRepository;
     private BookingService bookingService;
     private ParkingSpotMapper parkingSpotMapper;
 
@@ -50,7 +56,9 @@ public class ParkingSpotService {
             throw new ParkingSpotAlreadyOccupiedException("Parking spot is already occupied!");
         }
 
-        Booking booking = bookingService.createAndLinkBooking(car, parkingSpot.getNumber());
+        UserEntity user = getCurrentUser();
+
+        Booking booking = bookingService.createAndLinkBooking(car, parkingSpot.getNumber(), user);
         updateCarWithBooking(car, parkingSpotNumber, booking);
         updateParkingSpotWithCar(parkingSpot, registrationNumber, booking);
 
@@ -121,5 +129,11 @@ public class ParkingSpotService {
     private void resetCarParkingState(Car car) {
         car.setParkingSpotNumber(null);
         carRepository.save(car);
+    }
+
+    private UserEntity getCurrentUser() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

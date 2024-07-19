@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth-service/auth.service';
 
 const publicUrls = [
   '/car/all',
-  '/parking-spot',
+  '/parking-spot/all',
   '/car-brands',
   '/auth/login',
   '/auth/refresh'

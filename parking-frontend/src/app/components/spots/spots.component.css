@@ -1,63 +1,131 @@
-.table-container {
+.wrapper {
   display: flex;
-  justify-content: center;
-  align-items:center;
-  background-color: #f2f6f9;
-  height: calc(100vh - 80px);
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.content-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin-left: 125px;
+  overflow-y: auto;
+}
+
+.parking-spots-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: bold;
+  font-family: monospace;
+  color: #838c94;
+  margin-bottom: 20px;
+  text-align: center;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background-color:  #00b894;
 }
 
 .table-wrapper {
-  width: 1500px;
-  height: 600px;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  th {
-    border-top: 3px solid #ab596a;
-  }
-  
-  .available-button {
-    background-color: green;
-    color: white;
-  }
-  
-  .not-available-button {
-    background-color: white;
-    color: red;
-    font-weight: bold;
-    margin-bottom: 5px;
-    
-  }
-  .available-offset {
-    margin-left: 14px;
-  }
-
-  .not-available-icon {
-    color: black;
-    top: 3px;
-  } 
-
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-
-.table {
-  flex: 1;
-  overflow: auto;
+table {
+  width: 100%;
 }
 
-.mat-paginator {
-align-self: center;
+.mat-header-cell {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: bold;
+  font-size: 14px;
 }
 
-.table-title {
-  font-size: 35px;
-  font-family: fantasy;
-  letter-spacing: 2px;
-  display: flex;
-  justify-content: center;
-  color: #ce213e;
+.mat-cell {
+  font-size: 14px;
+  color: #495057;
 }
 
 .actions-column {
-  width: 215px;
+  width: 200px;
+  text-align: center;
+}
+
+.available-button, .not-available-button, .finish-parking-button, .disabled-button {
+  min-width: 120px;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.available-button {
+  background-color: #00b894 !important;
+  color: white !important;
+}
+
+.not-available-button {
+  background-color: #d3d3d3 !important;
+  color: #666 !important;
+}
+
+.finish-parking-button {
+  background-color: #ff6b6b !important;
+  color: white !important;
+}
+
+.disabled-button {
+  background-color: #f5f5f5 !important;
+  color: #a0a0a0 !important;
+  cursor: not-allowed !important;
+}
+
+button:not(:disabled):hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:disabled {
+  opacity: 1 !important;
+  cursor: not-allowed !important;
+}
+.mat-paginator {
+  border-top: 1px solid #e9ecef;
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .actions-column {
+    width: auto;
+  }
+
+  .available-button, .not-available-button, .finish-parking-button {
+    min-width: 90px;
+    font-size: 12px;
+  }
 }

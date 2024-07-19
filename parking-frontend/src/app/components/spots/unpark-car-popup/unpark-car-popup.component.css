@@ -20,23 +20,20 @@ h1 {
 }
 
 .success-button {
-    background-color: rgb(58, 187, 46);
-    color: white;
-    width: 40%;
+    background-color: #00b894 !important;
+    color: white !important;
+    transition: all 0.3s ease;
+    width: 140px;
     margin: 0 30px;
 }
 
-.success-button:hover {
-    background-color: rgb(18, 77, 28);
-    color: white;
-}
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
 .cancel-button {
-    background-color: rgb(121, 121, 121);
-    color: white;
-}
-
-.cancel-button:hover {
-    background-color: rgb(66, 66, 66);
-    color: white;
+    background-color: #666 !important;
+    color: white !important;
 }
