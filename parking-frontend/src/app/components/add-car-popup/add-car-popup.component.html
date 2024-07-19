@@ -1,0 +1,65 @@
+<form [formGroup]="form" class="car-form">
+  <div mat-dialog-content class="form-content">
+  <mat-form-field appearance="fill" class="form-field">
+    <mat-label>Registration Number</mat-label>
+    <input matInput formControlName="registrationNumberField" required maxlength="10" (focusout)="checkRegistrationNumber()">
+    <button mat-icon-button matSuffix (click)="clearForm()" [disabled]="!form.disabled">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <mat-error *ngIf="form.get('registrationNumberField')?.hasError('required')">
+    Registration number is required
+    </mat-error>
+    <mat-error *ngIf="form.get('registrationNumberField')?.hasError('alreadyExists')">
+      Registration Number already exists
+    </mat-error>
+  </mat-form-field>
+
+<mat-form-field appearance="fill" class="form-field">
+    <mat-label>Select Car make</mat-label>
+    <mat-select formControlName="vehicleMakeField" required (ngModelChange)="updateCarModels($event)">
+      <mat-option *ngFor="let make of carMakes" [value]="make">
+        {{ make }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('vehicleMakeField')?.hasError('required')">
+      Car make is required
+      </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="form-field">
+    <mat-label>Vehicle Model</mat-label>
+    <mat-select formControlName="vehicleModelField" required>
+      <mat-option *ngFor="let model of carModels" [value]="model">
+        {{ model }}
+      </mat-option>
+    </mat-select> <mat-error *ngIf="form.get('vehicleModelField')?.hasError('required')">
+      Vehicle model is required
+      </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="form-field">
+    <mat-label>Color</mat-label>
+    <input matInput formControlName="colorField" required maxlength="12" [value]="form.get('colorField')?.value | upperFirstChar">
+    <mat-error *ngIf="form.get('colorField')?.hasError('required')">
+      Color is required
+      </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="form-field">
+    <mat-label>Production Year</mat-label>
+    <input matInput formControlName="productionYearField" required maxlength="4">
+    <mat-error *ngIf="form.get('productionYearField')?.hasError('required')">
+      Production year is required
+      </mat-error>
+      <mat-error *ngIf="form.get('productionYearField')?.hasError('productionYear')">
+        Production year must be exactly 4 digits
+        </mat-error>
+  </mat-form-field>
+</div>
+  <div mat-dialog-actions class="dialog-actions">
+    <button (click)="closePopup()" mat-raised-button class="close-popup-button">Close</button>
+    <div class="add-book-buttons">
+    <button (click)="saveCar()" [ngClass]="{'disabled': form.disabled}" [disabled]="form.disabled" mat-raised-button class="add-car-button">Add car</button>
+  </div>
+  </div>
+</form>

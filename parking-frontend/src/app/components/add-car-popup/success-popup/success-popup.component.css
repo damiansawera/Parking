@@ -1,0 +1,26 @@
+h1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.success-button-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
+}
+
+.success-button {
+    background-color: #00b894 !important;
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+button:not(:disabled):hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
