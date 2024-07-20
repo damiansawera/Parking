@@ -3,6 +3,7 @@ import { BehaviorSubject, interval, Observable, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { User } from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,13 @@ export class AuthService {
   private loginUrl = 'http://localhost:8080/auth/login';
   private registerUrl = 'http://localhost:8080/auth/register';
   private refreshUrl = 'http://localhost:8080/auth/refresh';
-  private tokenRefreshInterval = 300000;
+  private tokenRefreshInterval = 40000;
 
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   public loggedIn$ = this.loggedInSubject.asObservable();
+
+  private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem('token'));
+  public token$ = this.tokenSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
     this.startTokenRefreshTimer();
@@ -39,8 +43,9 @@ export class AuthService {
       );
   }
 
-  register(username: string, password: string, email: string) {
-    return this.http.post(this.registerUrl, {username, password, email}, {observe: 'response' })
+  register(user: User) {
+    console.log("starting to send");
+    return this.http.post(this.registerUrl, user, {observe: 'response' })
     .pipe(
       tap(() => {this.router.navigate(['/']);
   }),
@@ -60,6 +65,7 @@ export class AuthService {
         }),
         catchError(error => {
           console.error('Refresh token failed', error);
+          this.logout();
           throw error;
         })
       );
@@ -77,16 +83,17 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return this.tokenSubject.value;
   }
 
   setToken(token: string): void {
     localStorage.setItem('token', token);
+    this.tokenSubject.next(token);
   }
 
   private setSession(authResult: any): void {
     const body = authResult.body as any;
-    localStorage.setItem('token', body.accessToken);
+    this.setToken(body.accessToken);
     localStorage.setItem('refreshToken', body.refreshToken);
   }
   

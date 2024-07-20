@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers("/", "/car/all", "/parking-spot/all", "/car-brands", "/auth/**").permitAll()
-                        .requestMatchers("/booking/**", "/car/**", "/parking-spot/**", "/car-brands/**").authenticated())
+                        .requestMatchers("/booking/**", "/car/**", "/parking-spot/**", "/car-brands/**", "/user").authenticated())
                 .httpBasic(basic -> basic.authenticationEntryPoint(jwtAuthEntryPoint))
                 .exceptionHandling(Customizer.withDefaults())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

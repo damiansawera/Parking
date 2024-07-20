@@ -1,7 +1,7 @@
+<app-sidebar></app-sidebar>
+<app-header></app-header>
 <div class="wrapper">
-  <app-sidebar></app-sidebar>
   <div class="content-container">
-    <app-header></app-header>
     <div class="parking-spots-section">
       <h2 class="section-title">Parking Spots</h2>
       <div class="table-wrapper">
@@ -33,7 +33,8 @@
                 <button 
                   mat-raised-button
                   type="button"
-                  [ngClass]="{'available-button': !spots.taken, 'finish-parking-button': spots.taken}"
+                  class="btn"
+                  [ngClass]="{'btn-green-1': !spots.taken, 'btn-red-1': spots.taken}"
                   (click)="spots.taken ? finishParkingPopup(spots) : onAvailableClick(spots)">
                   {{ spots.taken ? 'Finish Parking' : 'Available' }}
                 </button>
@@ -42,7 +43,8 @@
                 <button 
                   mat-raised-button
                   type="button"
-                  [ngClass]="{'not-available-button': spots.taken, 'disabled-button': !spots.taken}"
+                  class="btn"
+                  [ngClass]="{'btn-disabled-2': spots.taken, 'btn-disabled-1': !spots.taken}"
                   disabled>
                   {{ spots.taken ? 'Not available' : 'Available' }}
                 </button>

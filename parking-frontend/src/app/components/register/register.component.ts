@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth-service/auth.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from "../header/header.component";
 import { RouterModule } from '@angular/router';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-register',
@@ -11,14 +12,21 @@ import { RouterModule } from '@angular/router';
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
-username: string = '';
-password: string = '';
-email: string = '';
+user: User = {
+  fullName: '',
+  username: '',
+  email: '',
+  password: ''
+};
 
 constructor(private authService: AuthService) {}
 
 register() {
-  this.authService.register(this.username, this.password, this.email);
+  this.authService.register(this.user).subscribe(response => {
+    console.log("Registration successful", response);
+  }, error => {
+    console.error("Registration failed", error);
+  });
 }
 
 }

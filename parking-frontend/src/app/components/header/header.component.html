@@ -1,11 +1,11 @@
 <div class="header-container">
     <div *ngIf="!isLoggedIn">
-    <button class="login-button" mat-raised-button (click)="redirectToLogin()">LOGIN</button>
-    <button class="register-button" mat-raised-button (click)="redirectToRegister()">REGISTER</button>
+    <button class="btn btn-green-2 login-button" mat-raised-button (click)="redirectToLogin()">Login</button>
+    <button class="btn btn-brown register-button" mat-raised-button (click)="redirectToRegister()">Register</button>
     </div>
     <div *ngIf="isLoggedIn">
-        <button class = "logout-button" mat-raised-button (click)="logout()">LOGOUT</button>
-        <button class = "my-account-button" mat-raised-button>My Account</button>
+        <button class="btn btn-red-2 logout-button" mat-raised-button (click)="logout()">Logout</button>
+        <button class="btn btn-green-2 my-account-button" mat-raised-button (click)="redirectToMyAccount()">My Account</button>
       </div>
     <div class="title">Parking System</div>
     </div>

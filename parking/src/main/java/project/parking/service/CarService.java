@@ -27,13 +27,14 @@ public class CarService {
 
     private final CarRepository carRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final CarMapper carMapper;
 
     public CarDTO addNewCar(CarDTO carDTO) {
         if (doesRegistrationNumberExist(carDTO)) {
             throw new ExistingRegistrationNumberException("Car with this registration number already exists");
         }
-        UserEntity user = getCurrentUser();
+        UserEntity user = userService.getCurrentUser();
 
         Car car = carMapper.carDTOToCar(carDTO);
         car.setUserEntity(user);
@@ -92,9 +93,4 @@ public class CarService {
         return carRepository.existsByRegistrationNumber(carDTO.getRegistrationNumber());
     }
 
-    private UserEntity getCurrentUser() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
 }

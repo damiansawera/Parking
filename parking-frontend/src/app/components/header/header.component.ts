@@ -31,6 +31,10 @@ export class HeaderComponent {
   redirectToRegister(): void {
     this.router.navigate(['/register']);
   }
+
+  redirectToMyAccount(): void {
+    this.router.navigate(['/my-account']);
+  }
   
   logout(): void {
     this.authService.logout();
