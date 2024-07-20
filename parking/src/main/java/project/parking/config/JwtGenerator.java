@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtGenerator {
-    public static final long JWT_EXPIRATION = 600000;
+    public static final long JWT_EXPIRATION = 60000;
     public static final long JWT_REFRESH_EXPIRATION = 100000000;
     public static final String JWT_SECRET = "Secret";
 

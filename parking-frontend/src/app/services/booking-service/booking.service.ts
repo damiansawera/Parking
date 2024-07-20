@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { Booking } from '../../models/booking';
 
 @Injectable({
@@ -8,6 +8,12 @@ import { Booking } from '../../models/booking';
 })
 export class BookingService {
   private getAllUserBookingsUrl = 'http://localhost:8080/booking/user';
+
+  private bookingCountSubject = new BehaviorSubject<number>(0);
+  bookingCount$ = this.bookingCountSubject.asObservable();
+
+  private bookingsSubject = new BehaviorSubject<Booking[]>([]);
+  bookings$ = this.bookingsSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -25,5 +31,12 @@ export class BookingService {
     return this.getAllBookings().pipe(
       map((bookings: any[]) => bookings.filter(booking => booking.paid && booking.bookingEndDate !== null))
     );
+  }
+
+  getTotalBookingsCount() {
+    this.getAllBookings().subscribe(bookings => {
+      const count = bookings.length;
+      this.bookingCountSubject.next(count);
+    });
   }
 }

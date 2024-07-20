@@ -1,5 +1,6 @@
 package project.parking.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,8 +20,11 @@ import project.parking.mapper.UserMapper;
 import project.parking.model.UserEntity;
 import project.parking.repository.UserRepository;
 
+import java.util.Date;
+
 @Service
 @AllArgsConstructor
+@Transactional
 public class AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -34,9 +38,11 @@ public class AuthService {
             throw new RuntimeException("User already exists!");
         }
         UserEntity userEntity = new UserEntity();
+        userEntity.setFullName(userRegistrationDTO.getFullName());
         userEntity.setUsername(userRegistrationDTO.getUsername());
         userEntity.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
         userEntity.setEmail(userRegistrationDTO.getEmail());
+        userEntity.setMemberSince(new Date());
         userEntity.addRole(Role.USER);
         return userMapper.userToUserDTO(userRepository.save(userEntity));
     }

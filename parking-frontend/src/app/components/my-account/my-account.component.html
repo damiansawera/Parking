@@ -1,0 +1,42 @@
+<app-header></app-header>
+<app-sidebar></app-sidebar>
+<div class="wrapper">
+  <div class="my-account-container">
+    <h1 class="section-title">My Account</h1>
+    
+    <div class="account-info-card card">
+      <h2>Account Balance</h2>
+      <div class="balance-amount">PLN {{ 100 }}</div>
+      <button class="btn btn-green-1" mat-raised-button (click)="openAddFundsPopup()">Add Funds</button>
+    </div>
+
+    <div class="account-details-container">
+      <div class="account-details-card card">
+        <h2>Personal Information</h2>
+        <p><strong>Name:</strong> {{ user?.fullName }}</p>
+        <p><strong>Email:</strong> {{ user?.email }}</p>
+        <p><strong>Member Since:</strong> {{ user?.memberSince | date:'mediumDate' }}</p>
+      </div>
+
+      <div class="account-details-card card">
+        <h2>Parking History</h2>
+        <p><strong>Total Parkings:</strong> {{ totalBookingsCount }}</p>
+        <p><strong>Last Parking:</strong> {{ latestParkingDate | date:'medium' }}</p>
+        <p><strong>Favorite Spot:</strong> {{ mostCommonParkingSpot }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-overlay" *ngIf="showAddFundsPopup">
+  <div class="popup-content card">
+    <h2>Add Funds</h2>
+    <input type="number" placeholder="Enter amount" class="amount-input">
+    <div class="payment-methods">
+      <button class="btn btn-green-2" mat-raised-button (click)="addFunds('creditCard')">Credit Card</button>
+      <button class="btn btn-green-2" mat-raised-button (click)="addFunds('paypal')">PayPal</button>
+      <button class="btn btn-green-2" mat-raised-button (click)="addFunds('bankTransfer')">Bank Transfer</button>
+    </div>
+    <button class="btn btn-brown" mat-raised-button (click)="closeAddFundsPopup()">Cancel</button>
+  </div>
+</div>

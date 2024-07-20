@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class ParkingSpotService {
     private final ParkingSpotRepository parkingSpotRepository;
     private final CarRepository carRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private BookingService bookingService;
     private ParkingSpotMapper parkingSpotMapper;
 
@@ -56,7 +56,7 @@ public class ParkingSpotService {
             throw new ParkingSpotAlreadyOccupiedException("Parking spot is already occupied!");
         }
 
-        UserEntity user = getCurrentUser();
+        UserEntity user =userService.getCurrentUser();
 
         Booking booking = bookingService.createAndLinkBooking(car, parkingSpot.getNumber(), user);
         updateCarWithBooking(car, parkingSpotNumber, booking);
@@ -129,11 +129,5 @@ public class ParkingSpotService {
     private void resetCarParkingState(Car car) {
         car.setParkingSpotNumber(null);
         carRepository.save(car);
-    }
-
-    private UserEntity getCurrentUser() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

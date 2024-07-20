@@ -12,14 +12,14 @@
     </div>
   
     <div class="dialog-actions">
-      <button (click)="closePopup()" mat-raised-button class="close-button">Close</button>
+      <button (click)="closePopup()" mat-raised-button class="btn btn-red-2">Close</button>
       <div class="right-buttons">
-        <button (click)="addNewCar()" mat-raised-button class="add-car-button">Add New Car</button>
+        <button (click)="addNewCar()" mat-raised-button class="btn btn-green-1">Add New Car</button>
         <button (click)="bookParkingSpot()" 
                 [disabled]="!selectedCar" 
                 mat-raised-button 
-                class="book-parking-button"
-                [ngClass]="{'enabled': selectedCar}">
+                class="btn btn-green-1"
+                [ngClass]="{'enabled': selectedCar, 'btn-disabled-2': !selectedCar}">
           Book Parking Spot
         </button>
       </div>
