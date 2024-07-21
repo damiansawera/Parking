@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-car-popup',
@@ -12,10 +12,15 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrl: './success-popup.component.css'
 })
 export class SuccessPopupComponent {
+message: string = '';
 
 constructor(
-  private ref: MatDialogRef<SuccessPopupComponent>
-) {}
+  private ref: MatDialogRef<SuccessPopupComponent>,
+  @Inject(MAT_DIALOG_DATA) public data: { message: string }
+) 
+{
+this.message = data.message;
+}
 
 
 closePopup() {

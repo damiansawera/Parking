@@ -107,13 +107,6 @@ export class AddCarPopupComponent implements OnInit {
     }
   }
 
-  openSuccessPopup() {
-    const dialogRef = this.dialog.open(SuccessPopupComponent, {
-      height: '150px',
-      width: '450px'
-    });
-    }
-
     checkRegistrationNumber() {
       const registrationNumber = this.form.get('registrationNumberField')?.value;
       if (registrationNumber) {

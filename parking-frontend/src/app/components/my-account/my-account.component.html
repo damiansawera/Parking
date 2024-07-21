@@ -6,7 +6,7 @@
     
     <div class="account-info-card card">
       <h2>Account Balance</h2>
-      <div class="balance-amount">PLN {{ 100 }}</div>
+      <div class="balance-amount">{{ user?.wallet?.currency }} {{ user?.wallet?.balance }}</div>
       <button class="btn btn-green-1" mat-raised-button (click)="openAddFundsPopup()">Add Funds</button>
     </div>
 
@@ -31,11 +31,9 @@
 <div class="popup-overlay" *ngIf="showAddFundsPopup">
   <div class="popup-content card">
     <h2>Add Funds</h2>
-    <input type="number" placeholder="Enter amount" class="amount-input">
+    <input type="number" [(ngModel)]="amountToAdd" placeholder="Enter amount" class="amount-input">
     <div class="payment-methods">
-      <button class="btn btn-green-2" mat-raised-button (click)="addFunds('creditCard')">Credit Card</button>
-      <button class="btn btn-green-2" mat-raised-button (click)="addFunds('paypal')">PayPal</button>
-      <button class="btn btn-green-2" mat-raised-button (click)="addFunds('bankTransfer')">Bank Transfer</button>
+      <button class="btn btn-green-2" mat-raised-button (click)="addFunds()">Transfer</button>
     </div>
     <button class="btn btn-brown" mat-raised-button (click)="closeAddFundsPopup()">Cancel</button>
   </div>

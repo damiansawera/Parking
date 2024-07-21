@@ -32,6 +32,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtGenerator jwtGenerator;
     private final UserDetailsService userDetailsService;
+    private final WalletService walletService;
 
     public UserDTO registerUser(UserRegistrationDTO userRegistrationDTO) {
         if (userExist(userRegistrationDTO.getUsername())) {
@@ -44,6 +45,7 @@ public class AuthService {
         userEntity.setEmail(userRegistrationDTO.getEmail());
         userEntity.setMemberSince(new Date());
         userEntity.addRole(Role.USER);
+        userEntity.setWallet(walletService.createWallet(userEntity));
         return userMapper.userToUserDTO(userRepository.save(userEntity));
     }
 

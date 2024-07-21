@@ -34,10 +34,9 @@ public class CarService {
         if (doesRegistrationNumberExist(carDTO)) {
             throw new ExistingRegistrationNumberException("Car with this registration number already exists");
         }
-        UserEntity user = userService.getCurrentUser();
 
         Car car = carMapper.carDTOToCar(carDTO);
-        car.setUserEntity(user);
+        car.setUserEntity(userService.getCurrentUser());
         carRepository.save(car);
         return carMapper.carToCarDTO(car);
     }

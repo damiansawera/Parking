@@ -31,6 +31,8 @@ public class UserEntity {
     private List<Booking> bookings;
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Wallet wallet;
 
     public void addRole(Role role) {
         roles.add(role);

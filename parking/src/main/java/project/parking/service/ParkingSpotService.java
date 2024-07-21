@@ -56,9 +56,7 @@ public class ParkingSpotService {
             throw new ParkingSpotAlreadyOccupiedException("Parking spot is already occupied!");
         }
 
-        UserEntity user =userService.getCurrentUser();
-
-        Booking booking = bookingService.createAndLinkBooking(car, parkingSpot.getNumber(), user);
+        Booking booking = bookingService.createAndLinkBooking(car, parkingSpot.getNumber(), userService.getCurrentUser());
         updateCarWithBooking(car, parkingSpotNumber, booking);
         updateParkingSpotWithCar(parkingSpot, registrationNumber, booking);
 

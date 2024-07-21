@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ParkingSpot } from './models/parking-spot';
 import { ParkingSpotService } from './services/parking-spot-service/parking-spot.service';
+import { AuthService } from './services/auth-service/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +15,6 @@ export class AppComponent implements OnInit {
     this.parkingSpotService.loadAllParkingSpots().subscribe();
   }
 
-  constructor(private parkingSpotService: ParkingSpotService) {}
+  constructor(private parkingSpotService: ParkingSpotService, private authService: AuthService) {}
   title = 'parking-frontend';
 }
