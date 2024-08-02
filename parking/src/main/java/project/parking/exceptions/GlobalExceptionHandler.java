@@ -8,6 +8,7 @@ import project.parking.exceptions.authExceptions.AuthException;
 import project.parking.exceptions.bookingExceptions.BookingException;
 import project.parking.exceptions.carExceptions.CarException;
 import project.parking.exceptions.parkingSpotExceptions.ParkingSpotException;
+import project.parking.exceptions.walletExceptions.WalletException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -25,6 +26,10 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<String> handleAuthException(AuthException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(WalletException.class)
+    public ResponseEntity<String> handleWalletException(WalletException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

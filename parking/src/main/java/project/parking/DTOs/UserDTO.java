@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.parking.model.Booking;
 import project.parking.model.Car;
+import project.parking.model.Wallet;
 
 import java.awt.print.Book;
 import java.util.Date;
@@ -19,4 +20,5 @@ public class UserDTO {
         private String fullName;
         private String email;
         private Date memberSince;
+        private WalletDTO wallet;
     }

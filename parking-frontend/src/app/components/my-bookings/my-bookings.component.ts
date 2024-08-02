@@ -15,19 +15,26 @@ import { CommonModule } from '@angular/common';
 export class MyBookingsComponent implements OnInit {
 currentBookings: Booking[] = [];
 pastBookings: Booking[] = [];
+bookingStartDate: any;
 
   constructor(private bookingService: BookingService) {}
 
   ngOnInit(): void {
-   this.loadBookings(); 
+   this.getBookings(); 
   }
 
-  loadBookings() {
+  getBookings() {
     this.bookingService.getCurrentBookings().subscribe(
-      bookings => this.currentBookings = bookings
+      bookings => {
+        this.currentBookings = bookings.map(booking => ({
+          ...booking,
+          price: this.bookingService.calculatePrice(booking.bookingStartDate)
+        }));
+      }
     );
     this.bookingService.getPastBookings().subscribe(
       bookings => this.pastBookings = bookings
     );
   }
+
 }

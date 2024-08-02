@@ -12,7 +12,7 @@ export class AuthService {
   private loginUrl = 'http://localhost:8080/auth/login';
   private registerUrl = 'http://localhost:8080/auth/register';
   private refreshUrl = 'http://localhost:8080/auth/refresh';
-  private tokenRefreshInterval = 40000;
+  private tokenRefreshInterval = 400000;
 
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
   public loggedIn$ = this.loggedInSubject.asObservable();

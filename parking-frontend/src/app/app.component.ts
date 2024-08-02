@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ParkingSpot } from './models/parking-spot';
 import { ParkingSpotService } from './services/parking-spot-service/parking-spot.service';
+
 
 @Component({
   selector: 'app-root',

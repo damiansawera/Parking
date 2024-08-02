@@ -1,8 +1,11 @@
-<h1>Do you want to unpark your car?</h1>
+<h1>Do you want to finish parking?</h1>
 <div class="price-container">
-    <h2>Payment due: {{calculatePrice()}}$</h2>
+    <h2>Payment due: {{price}} PLN</h2>
+</div>
+<div class="error-message" *ngIf="errorMessage" style="color: red;">
+    {{errorMessage}}
 </div>
 <div class="buttons-container">
-    <button mat-raised-button class="btn btn-cancel" (click)="closePopup()" >Cancel</button>
-    <button mat-raised-button class="btn btn-green-1" (click)="finishParking()" >Pay and go</button>
+    <button mat-raised-button class="btn btn-cancel" (click)="closePopup()">Cancel</button>
+    <button mat-raised-button class="btn btn-green-1" (click)="finishParking()">Pay and go</button>
 </div>

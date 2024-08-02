@@ -1,13 +1,17 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { ParkingSpotService } from '../../../services/parking-spot-service/parking-spot.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WalletService } from '../../../services/wallet-service/wallet.service';
+import { NgIf } from '@angular/common';
+import { BookingService } from '../../../services/booking-service/booking.service';
 
 @Component({
   selector: 'app-unpark-car-popup',
   standalone: true,
   imports: [
-    MatButton
+    MatButton,
+    NgIf
   ],
   templateUrl: './unpark-car-popup.component.html',
   styleUrl: './unpark-car-popup.component.css'
@@ -15,39 +19,50 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class UnparkCarPopupComponent {
 
 parkingSpotNumber: string;
-bookingStartDate: Date | null | undefined;
+bookingStartDate: Date;
+errorMessage?: string;
+price: number = 0;
 
   constructor(private parkingSpotService: ParkingSpotService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private ref: MatDialogRef<UnparkCarPopupComponent>) 
+              private ref: MatDialogRef<UnparkCarPopupComponent>,
+              private walletService: WalletService,
+              private bookingService: BookingService,
+              @Inject(MAT_DIALOG_DATA) public data: any
+) 
   {
     this.parkingSpotNumber = data.parkingSpotNumber;
     this.bookingStartDate = data.bookingStartDate;
+    this.getPrice();
   }
 
-  calculatePrice(): number {
-    if (!this.bookingStartDate) {
-      return 0;
-    }
-    const now = new Date();
-    const startDate = new Date(this.bookingStartDate);
-    const diffMs = now.getTime() - startDate.getTime();
-    const diffMinutes = Math.floor(diffMs / 60000);
-
-    const pricePerHour = 5;
-    const price = pricePerHour * Math.ceil(diffMinutes / 60);
-    return price;
+  getPrice() {
+   this.price = this.bookingService.calculatePrice(this.bookingStartDate);
   }
 
   finishParking(): void {
-    this.parkingSpotService.makeParkingSpotAvailable(this.parkingSpotNumber)
-    .subscribe(response => {
-      console.log('Response from server:', response);
-      this.closePopup();
-    }, error => {
-    console.error('Error:', error); 
-  });
-  }
+    const priceToDeduct = this.bookingService.calculatePrice(this.bookingStartDate);
+    this.walletService.deductFromBalance(priceToDeduct)
+    .subscribe(
+      walletResponse => {
+        console.log('Wallet updated:', walletResponse);
+        this.parkingSpotService.makeParkingSpotAvailable(this.parkingSpotNumber)
+          .subscribe(
+            response => {
+              console.log('Parking spot made available:', response);
+              this.closePopup();
+            },
+            error => {
+              console.error('Error making parking spot available:', error);
+              this.errorMessage = 'Error making parking spot available';
+            }
+          );
+      },
+      walletError => {
+        console.error('Error updating wallet:', walletError);
+        this.errorMessage = 'Insufficient balance';
+      }
+    );
+    }
 
   closePopup() {
     this.ref.close();

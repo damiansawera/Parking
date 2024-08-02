@@ -7,7 +7,7 @@ import { ParkingSpotService } from '../../services/parking-spot-service/parking-
 import { CarService } from '../../services/car-service/car.service';
 import { CarMakes } from '../../enums/car-makes';
 import { AddCarPopupComponent } from '../add-car-popup/add-car-popup.component';
-import { SuccessPopupComponent } from '../add-car-popup/success-popup/success-popup.component';
+import { DialogService } from '../../services/dialog-service/dialog.service';
 
 
 @Component({
@@ -29,6 +29,7 @@ constructor(
   private parkingSpotService: ParkingSpotService,
   private carService: CarService,
   private ref:MatDialogRef<BookPopupComponent>,
+  private dialogService: DialogService,
   private dialog: MatDialog,
   @Inject(MAT_DIALOG_DATA) public data: { parkingSpotNumber: string, refresh?: boolean }
 ) {
@@ -53,28 +54,18 @@ getVehicleImage(make: keyof typeof CarMakes): string {
 addNewCar() {
   const addCarDialogRef = this.dialog.open(AddCarPopupComponent, {
     width: '40%',
-    height: '500px',
+    height: '450px',
     data: { parkingSpotNumber: this.data.parkingSpotNumber }
   });
 
   addCarDialogRef.afterClosed().subscribe(result => {
     if (result === 'success') {
-      this.openSuccessPopup();
+      this.dialogService.openSuccessPopup("Car added successfully!").afterClosed().subscribe(() => {
+        this.ref.close('refresh');
+      });
     }
   });
 }
-
-openSuccessPopup() {
-  const successDialogRef = this.dialog.open(SuccessPopupComponent, {
-    height: '150px',
-    width: '450px'
-  });
-
-  successDialogRef.afterClosed().subscribe(() => {
-    this.ref.close('refresh');
-  });
-}
-
 
 bookParkingSpot() {
   if(this.selectedCar) {  

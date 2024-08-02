@@ -13,9 +13,11 @@ import { HeaderComponent } from "../header/header.component";
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { TimeDifferencePipe } from '../../pipes/time-dfference.pipe';
 import { UnparkCarPopupComponent } from './unpark-car-popup/unpark-car-popup.component';
-import { filter, Observable, switchMap } from 'rxjs';
+import { filter, Observable, switchMap, take } from 'rxjs';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { BookPopupComponent } from '../book-popup/book-popup.component';
+import { Car } from '../../models/car';
+import { CarService } from '../../services/car-service/car.service';
 
 @Component({
     selector: 'app-spots',
@@ -40,19 +42,28 @@ export class SpotsComponent implements OnInit {
   displayedColumns: string[] = ['Number', 'Floor', 'ParkingTime', 'RegistrationNumber', 'Actions'];
   dataSource = new MatTableDataSource<ParkingSpot>();
   isLoggedIn$: Observable<boolean>;
+  userCars: Car[] = [];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private parkingSpotService: ParkingSpotService,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private carService: CarService
   ) {
     this.isLoggedIn$ = this.authService.isLoggedIn();
   }
 
   ngOnInit() {
     this.loadParkingSpots();
+    this.loadUserCars();
+  }
+
+  loadUserCars() {
+    this.carService.getAllUserCars().subscribe((cars: Car[]) => {
+      this.userCars = cars;
+    });
   }
 
   ngAfterViewInit() {
@@ -71,11 +82,16 @@ export class SpotsComponent implements OnInit {
     });
   }
 
+  isUserCar(registrationNumber: string): boolean {
+    return this.userCars.some(car => car.registrationNumber === registrationNumber);
+  }
+
   onAvailableClick(parkingSpot: ParkingSpot) {
-    this.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn && !parkingSpot.taken) {
-        this.openBookPopup(parkingSpot);
-      }
+    this.isLoggedIn$.pipe(
+      take(1),
+      filter(isLoggedIn => isLoggedIn && !parkingSpot.taken)
+    ).subscribe(() => {
+      this.openBookPopup(parkingSpot);
     });
   }
 
@@ -89,8 +105,8 @@ export class SpotsComponent implements OnInit {
 
   openBookPopup(parkingSpot: ParkingSpot) {
     const dialogRef = this.dialog.open(BookPopupComponent, {
-      width: '40%',
-      height: '500px',
+      width: '37%',
+      maxHeight: '80vh',
       data: { parkingSpotNumber: parkingSpot.number }
     });
   
@@ -98,8 +114,6 @@ export class SpotsComponent implements OnInit {
       filter(result => result === 'refresh'),
       switchMap(() => {
         return this.dialog.open(BookPopupComponent, {
-          width: '40%',
-          height: '500px',
           data: { parkingSpotNumber: parkingSpot.number, refresh: true }
         }).afterClosed();
       })
@@ -107,7 +121,7 @@ export class SpotsComponent implements OnInit {
   }
 
   finishParkingPopup(parkingSpot: ParkingSpot) {
-    const dialogRef = this.dialog.open(UnparkCarPopupComponent, {
+    this.dialog.open(UnparkCarPopupComponent, {
       width: '25%',
       height: '200px',
       data: {
