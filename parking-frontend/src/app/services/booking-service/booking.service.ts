@@ -14,6 +14,7 @@ export class BookingService {
 
   private bookingsSubject = new BehaviorSubject<Booking[]>([]);
   bookings$ = this.bookingsSubject.asObservable();
+  
 
   constructor(private http: HttpClient) { }
 
@@ -38,5 +39,18 @@ export class BookingService {
       const count = bookings.length;
       this.bookingCountSubject.next(count);
     });
+  }
+
+  calculatePrice(bookingStartDate: Date): number {
+    if (!bookingStartDate) {
+      return 0;
+    }
+    const now = new Date();
+    const startDate = new Date(bookingStartDate);
+    const diffMs = now.getTime() - startDate.getTime();
+    const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+    const pricePerHour = 5;
+    const price = pricePerHour * diffHours;
+    return parseFloat(price.toFixed(2));
   }
 }

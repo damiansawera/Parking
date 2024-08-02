@@ -36,18 +36,23 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/", "/car/all", "/parking-spot/all", "/car-brands", "/auth/**").permitAll()
-                        .requestMatchers("/booking/**", "/car/**", "/parking-spot/**", "/car-brands/**", "/user/**", "/wallet/**").authenticated())
+                        .requestMatchers("/", "/car/all", "/parking-spot/all", "/car-brands", "/auth/**", "/payu/notify", "/payu/token").permitAll()
+                        .requestMatchers("/booking/**", "/car/**", "/parking-spot/**", "/car-brands/**", "/user/**", "/wallet/**", "/payu/order").authenticated())
                 .httpBasic(basic -> basic.authenticationEntryPoint(jwtAuthEntryPoint))
                 .exceptionHandling(Customizer.withDefaults())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(payuAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return  new JwtAuthenticationFilter();
+    }
+    @Bean
+    public PayUAuthenticationFilter payuAuthenticationFilter() {
+        return new PayUAuthenticationFilter();
     }
 
     @Bean

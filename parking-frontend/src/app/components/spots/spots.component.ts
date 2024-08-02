@@ -16,6 +16,8 @@ import { UnparkCarPopupComponent } from './unpark-car-popup/unpark-car-popup.com
 import { filter, Observable, switchMap, take } from 'rxjs';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { BookPopupComponent } from '../book-popup/book-popup.component';
+import { Car } from '../../models/car';
+import { CarService } from '../../services/car-service/car.service';
 
 @Component({
     selector: 'app-spots',
@@ -40,19 +42,28 @@ export class SpotsComponent implements OnInit {
   displayedColumns: string[] = ['Number', 'Floor', 'ParkingTime', 'RegistrationNumber', 'Actions'];
   dataSource = new MatTableDataSource<ParkingSpot>();
   isLoggedIn$: Observable<boolean>;
+  userCars: Car[] = [];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private parkingSpotService: ParkingSpotService,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private carService: CarService
   ) {
     this.isLoggedIn$ = this.authService.isLoggedIn();
   }
 
   ngOnInit() {
     this.loadParkingSpots();
+    this.loadUserCars();
+  }
+
+  loadUserCars() {
+    this.carService.getAllUserCars().subscribe((cars: Car[]) => {
+      this.userCars = cars;
+    });
   }
 
   ngAfterViewInit() {
@@ -69,6 +80,10 @@ export class SpotsComponent implements OnInit {
         console.error('Error fetching data:', error);
       },
     });
+  }
+
+  isUserCar(registrationNumber: string): boolean {
+    return this.userCars.some(car => car.registrationNumber === registrationNumber);
   }
 
   onAvailableClick(parkingSpot: ParkingSpot) {

@@ -8,6 +8,7 @@ import { BookingService } from '../../services/booking-service/booking.service';
 import { WalletService } from '../../services/wallet-service/wallet.service';
 import { FormsModule } from '@angular/forms';
 import { DialogService } from '../../services/dialog-service/dialog.service';
+import { PayUService } from '../../services/payu-service/payu.service';
 
 @Component({
   selector: 'app-my-account',
@@ -16,7 +17,7 @@ import { DialogService } from '../../services/dialog-service/dialog.service';
     SidebarComponent,
     HeaderComponent,
     CommonModule,
-  FormsModule],
+    FormsModule],
   templateUrl: './my-account.component.html',
   styleUrl: './my-account.component.css'
 })
@@ -31,14 +32,28 @@ export class MyAccountComponent implements OnInit {
   constructor(private userService: UserService,
               private bookingService: BookingService,
               private walletService: WalletService,
-              private dialogService: DialogService) {}
+              private dialogService: DialogService,
+              private payUService: PayUService) {}
 
   ngOnInit(): void {
     this.getUserInfo();
     this.getTotalBookingsCount();
   }
 
-  addFunds() {
+  addFundsPayU() {
+    this.payUService.createOrder(this.amountToAdd).subscribe(
+      (response) => {
+        if (response.redirectUri) {
+          window.location.href = response.redirectUri;
+        } else {
+          console.error('Invalid response:', response);
+          alert('Payment initiation failed. Please try again.');
+        }
+      }
+    );
+  }
+  
+  addFundsNoPayU() {
     this.walletService.topUpBalance(this.amountToAdd).subscribe( 
       response => {
       console.log("Balance updated", response);

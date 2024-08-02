@@ -14,7 +14,7 @@
                 {{booking.bookingStartDate | date:'short'}} - 
                 {{booking.bookingEndDate ? (booking.bookingEndDate | date:'short') : 'Ongoing'}}
               </div>
-              <div class="price">{{booking.price | currency:'PLN ':'symbol':'1.2-2'}}</div>
+              <div class="price">{{ booking.price | currency:'PLN ':'symbol':'1.2-2'}}</div>
               <div class="payment-status" [ngClass]="{'paid': booking.paid, 'unpaid': !booking.paid}">
                 {{booking.paid ? 'Paid' : 'Unpaid'}}
               </div>
@@ -34,7 +34,7 @@
                 {{booking.bookingStartDate | date:'short'}} - 
                 {{booking.bookingEndDate | date:'short'}}
               </div>
-              <div class="price">{{booking.price | currency:'PLN ':'symbol':'1.2-2'}}</div>
+              <div class="price">{{ booking.price | currency:'PLN ':'symbol':'1.2-2'}}</div>
               <div class="payment-status" [ngClass]="{'paid': booking.paid, 'unpaid': !booking.paid}">
                 {{booking.paid ? 'Paid' : 'Unpaid'}}
               </div>

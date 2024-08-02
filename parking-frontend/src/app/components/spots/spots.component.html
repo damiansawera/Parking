@@ -34,8 +34,11 @@
                   mat-raised-button
                   type="button"
                   class="btn"
-                  [ngClass]="{'btn-green-1': !spots.taken, 'btn-red-1': spots.taken}"
-                  (click)="spots.taken ? finishParkingPopup(spots) : onAvailableClick(spots)">
+                  [ngClass]="{'btn-green-1': !spots.taken,
+                              'btn-red-1': spots.taken && isUserCar(spots.registrationNumber),
+                              'btn-disabled-2': spots.taken && !isUserCar(spots.registrationNumber)}"
+                  (click)="spots.taken ? finishParkingPopup(spots) : onAvailableClick(spots)"
+                  [disabled]="spots.taken && !isUserCar(spots.registrationNumber)">
                   {{ spots.taken ? 'Finish Parking' : 'Available' }}
                 </button>
               </ng-container>
@@ -44,7 +47,8 @@
                   mat-raised-button
                   type="button"
                   class="btn"
-                  [ngClass]="{'btn-disabled-2': spots.taken, 'btn-disabled-1': !spots.taken}"
+                  [ngClass]="{'btn-disabled-2': spots.taken,
+                              'btn-disabled-1': !spots.taken}"
                   disabled>
                   {{ spots.taken ? 'Not available' : 'Available' }}
                 </button>

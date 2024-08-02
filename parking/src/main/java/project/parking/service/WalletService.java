@@ -35,6 +35,14 @@ public class WalletService {
        return walletMapper.walletToWalletDTO(walletRepository.save(wallet));
     }
 
+    public WalletDTO topUpWalletBalanceByUserId(float amount, Long userId) {
+        Wallet wallet = walletRepository.findByUserEntityId(userId)
+                .orElseThrow(() -> new WalletException("Wallet not found"));
+        wallet.setBalance(wallet.getBalance() + amount);
+
+        return walletMapper.walletToWalletDTO(walletRepository.save(wallet));
+    }
+
     public WalletDTO deductFromBalance(float amount) {
         Wallet wallet = walletRepository.findByUserEntity(userService.getCurrentUser())
                 .orElseThrow(() -> new WalletException("Wallet not found"));

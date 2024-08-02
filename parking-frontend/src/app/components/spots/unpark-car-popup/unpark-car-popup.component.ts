@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { ParkingSpotService } from '../../../services/parking-spot-service/parking-spot.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { WalletService } from '../../../services/wallet-service/wallet.service';
 import { NgIf } from '@angular/common';
+import { BookingService } from '../../../services/booking-service/booking.service';
 
 @Component({
   selector: 'app-unpark-car-popup',
@@ -18,34 +19,28 @@ import { NgIf } from '@angular/common';
 export class UnparkCarPopupComponent {
 
 parkingSpotNumber: string;
-bookingStartDate: Date | null | undefined;
-  errorMessage?: string;
+bookingStartDate: Date;
+errorMessage?: string;
+price: number = 0;
 
   constructor(private parkingSpotService: ParkingSpotService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private ref: MatDialogRef<UnparkCarPopupComponent>,
-  private walletService: WalletService) 
+              private ref: MatDialogRef<UnparkCarPopupComponent>,
+              private walletService: WalletService,
+              private bookingService: BookingService,
+              @Inject(MAT_DIALOG_DATA) public data: any
+) 
   {
     this.parkingSpotNumber = data.parkingSpotNumber;
     this.bookingStartDate = data.bookingStartDate;
+    this.getPrice();
   }
 
-  calculatePrice(): number {
-    if (!this.bookingStartDate) {
-      return 0;
-    }
-    const now = new Date();
-    const startDate = new Date(this.bookingStartDate);
-    const diffMs = now.getTime() - startDate.getTime();
-    const diffMinutes = diffMs / 60000;
-
-    const pricePerHour = 5;
-    const price = pricePerHour * (diffMinutes / 60);
-    return parseFloat(price.toFixed(2));
+  getPrice() {
+   this.price = this.bookingService.calculatePrice(this.bookingStartDate);
   }
 
   finishParking(): void {
-    const priceToDeduct = this.calculatePrice();
+    const priceToDeduct = this.bookingService.calculatePrice(this.bookingStartDate);
     this.walletService.deductFromBalance(priceToDeduct)
     .subscribe(
       walletResponse => {
