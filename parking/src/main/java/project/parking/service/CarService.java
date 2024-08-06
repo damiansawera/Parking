@@ -32,7 +32,7 @@ public class CarService {
 
     public CarDTO addNewCar(CarDTO carDTO) {
         if (doesRegistrationNumberExist(carDTO)) {
-            throw new ExistingRegistrationNumberException("Car with this registration number already exists");
+                                        throw new ExistingRegistrationNumberException("Car with this registration number already exists");
         }
 
         Car car = carMapper.carDTOToCar(carDTO);

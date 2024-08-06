@@ -1,0 +1,22 @@
+h1 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.btn-green-1 {
+    width: 140px;
+    margin: 0 30px;
+}
+
+.btn-red-2 {
+    margin: 0 30px;
+}

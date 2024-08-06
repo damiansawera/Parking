@@ -126,7 +126,8 @@ export class SpotsComponent implements OnInit {
       height: '200px',
       data: {
         parkingSpotNumber: parkingSpot.number,
-        bookingStartDate: parkingSpot.bookingStartDate
+        bookingStartDate: parkingSpot.bookingStartDate,
+        registrationNumber: parkingSpot.registrationNumber
       }
     });
   }
