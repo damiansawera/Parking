@@ -16,8 +16,6 @@ import { HondaModels } from '../../enums/honda-models';
 import { BmwModels } from '../../enums/bmw-models';
 import { AudiModels } from '../../enums/audi-models';
 import { ToyotaModels } from '../../enums/toyota-models';
-import { SuccessPopupComponent } from './success-popup/success-popup.component';
-import { BookPopupComponent } from '../book-popup/book-popup.component';
 
 @Component({
     selector: 'app-book-popup',
