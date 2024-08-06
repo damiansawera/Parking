@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Booking } from '../../models/booking';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { Booking } from '../../models/booking';
 })
 export class BookingService {
   private getAllUserBookingsUrl = 'http://localhost:8080/booking/user';
+  private getMonthlyBookingsUrl = 'http://localhost:8080/booking/monthly-booking-data';
 
   private bookingCountSubject = new BehaviorSubject<number>(0);
   bookingCount$ = this.bookingCountSubject.asObservable();
@@ -34,6 +35,13 @@ export class BookingService {
     );
   }
 
+  getMonthlyBookingData(month: number): Observable<{ month: number; year: number; bookings: number }[]> {
+    const year = 2024;
+    return this.http.get<{ month: number; year: number; bookings: number }[]>(
+      `${this.getMonthlyBookingsUrl}?year=${year}&month=${month}`
+    );
+  }
+
   getTotalBookingsCount() {
     this.getAllBookings().subscribe(bookings => {
       const count = bookings.length;
@@ -53,4 +61,5 @@ export class BookingService {
     const price = pricePerHour * diffHours;
     return parseFloat(price.toFixed(2));
   }
+
 }

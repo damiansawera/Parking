@@ -15,6 +15,7 @@ import project.parking.model.UserEntity;
 import project.parking.repository.BookingRepository;
 import project.parking.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +40,27 @@ public class BookingService {
         return bookingRepository.findByUserEntity(userEntity).stream()
                 .map(bookingMapper::bookingToBookingDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<Integer> getBookingsCountByMonth(int year, int month) {
+        validateMonthYear(year, month);
+
+        List<Object[]> results = bookingRepository.countBookingsByDay(year, month);
+        List<Integer> dailyCounts = new ArrayList<>();
+
+        // Initialize counts for each day of the month to 0
+        for (int i = 1; i <= 31; i++) {
+            dailyCounts.add(0);
+        }
+
+        // Populate dailyCounts with actual values from the query results
+        for (Object[] result : results) {
+            int day = (Integer) result[0];
+            long count = (Long) result[1];
+            dailyCounts.set(day - 1, (int) count);
+        }
+
+        return dailyCounts;
     }
 
     public BookingDTO createBooking(String registrationNumber, String parkingSpotNumber, UserEntity user) {
@@ -84,5 +106,14 @@ public class BookingService {
         notPaidBooking.setPaid(true);
 
         return bookingMapper.bookingToBookingDTO(bookingRepository.save(notPaidBooking));
+    }
+
+    private void validateMonthYear(int year, int month) {
+        if (year < 0) {
+            throw new IllegalArgumentException("Year must be a positive number.");
+        }
+        if (month < 1 || month > 12) {
+            throw new IllegalArgumentException("Month must be between 1 and 12.");
+        }
     }
 }

@@ -28,10 +28,15 @@
                 </div>
             </div>
             <div class="statistics-card">
-                <div class="statistics-title"> Available parking spots </div>
-                <div class="statistics-details">
-                    <div class="statistics-cars-parked"> {{ 30 - parkedCars.length }} </div>    
-                </div>
+                <div class="statistics-title">Monthly Booking Statistics</div>
+                <mat-form-field>
+                  <mat-select [(value)]="selectedMonth" (selectionChange)="updateChart()">
+                    <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <app-booking-chart [data]="bookingData" [selectedMonth]="selectedMonth"></app-booking-chart>
+              </div>
+              </div>
             </div>
             <div class="statistics-card">
                 <div class="statistics-title"> Parked cars by make </div>
@@ -48,5 +53,3 @@
             </div>
         </div>
     </div>
-</div>
-</div>

@@ -30,6 +30,11 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body(bookingService.getActiveBooking(registrationNumber));
     }
 
+    @GetMapping("/monthly-booking-data")
+    public ResponseEntity<List<Integer>> getBookingsCountByMonth(@RequestParam("year") int year, @RequestParam("month") int month) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookingService.getBookingsCountByMonth(year, month));
+    }
+
 //    @PostMapping
 //    public ResponseEntity<BookingDTO> createBooking(@RequestParam String registrationNumber, @RequestParam String parkingSpotNumber) {
 //        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(registrationNumber, parkingSpotNumber));
