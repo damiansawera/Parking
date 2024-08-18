@@ -12,8 +12,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     '/car-brands',
     '/auth/login',
     '/auth/refresh',
-    '/payu/notify',
-    '/document/generate'
+    '/payu/notify'
   ];
 
   if (publicUrls.some(url => req.url.includes(url))) {

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.parking.DTOs.BookingDTO;
 import project.parking.DTOs.CarDTO;
+import project.parking.exceptions.carExceptions.CarAlreadyParkedException;
 import project.parking.exceptions.carExceptions.CarNotFoundException;
 import project.parking.exceptions.carExceptions.ExistingRegistrationNumberException;
 import project.parking.mapper.CarMapper;
@@ -66,11 +67,15 @@ public class CarService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteById(Long id) {
-        if (!carRepository.existsById(id)) {
-            throw new CarNotFoundException("Car with ID " + id + " not found");
+    public void deleteById(String registrationNumber) {
+        Car car = carRepository.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new CarNotFoundException("Car with registration number " + registrationNumber + " not found"));
+
+        if (isCarParked(car.getId())) {
+            throw new CarAlreadyParkedException("Car is parked. Finish parking first to delete a car");
         }
-        carRepository.deleteById(id);
+
+        carRepository.deleteById(car.getId());
     }
 
     public CarDTO updateCar(Long id, CarDTO carDTO) {
@@ -90,6 +95,12 @@ public class CarService {
 
     public boolean doesRegistrationNumberExist(CarDTO carDTO) {
         return carRepository.existsByRegistrationNumber(carDTO.getRegistrationNumber());
+    }
+
+    public boolean isCarParked(Long id) {
+        return carRepository.findById(id)
+                .map(car -> car.getParkingSpotNumber() != null)
+                .orElseThrow(() -> new CarNotFoundException("Car with ID " + id + " not found"));
     }
 
 }

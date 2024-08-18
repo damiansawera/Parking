@@ -12,6 +12,7 @@ export class CarService {
   private getAllCarsUrl = 'http://localhost:8080/car/all';
   private getAllUserCarsUrl = 'http://localhost:8080/car/user';
   private getCarByRegistrationNumberUrl = 'http://localhost:8080/car/search';
+  private deleteCarByRegistrationNumberUrl = 'http://localhost:8080/car/';
 
   constructor(private http: HttpClient) { }
 
@@ -38,4 +39,7 @@ export class CarService {
     return this.http.get<Car[]>(this.getAllUserCarsUrl);
   }
 
+  deleteCar(registrationNumber: string): Observable<void> {
+    return this.http.delete<void>(this.deleteCarByRegistrationNumberUrl + `${registrationNumber}`);
+  }
 }

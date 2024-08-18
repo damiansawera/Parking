@@ -1,13 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HeaderComponent } from "../header/header.component";
 import { CarService } from '../../services/car-service/car.service';
 import { NgFor } from '@angular/common';
-import { CarMakes } from '../../enums/car-makes';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { Chart, ChartConfiguration, ChartData, ChartOptions, ChartType, registerables } from 'chart.js';
 import { BookingService } from '../../services/booking-service/booking.service';
-import { BookingChartComponent } from '../chart/chart.component';
+import { CarPhotos } from '../../models/car-photos';
+
+Chart.register(...registerables);
 
 @Component({
     selector: 'app-home',
@@ -17,37 +19,44 @@ import { BookingChartComponent } from '../chart/chart.component';
     imports: [
         SidebarComponent,
         HeaderComponent,
-        BookingChartComponent,
         NgFor,
         MatFormField,
         MatSelect,
-        MatOption,
-        MatLabel
+        MatOption
     ]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+    parkedCarsByMakeChart: Chart | null = null;
     parkedCars: any[] = [];
     carMakes: string[] = [];
     selectedCarMake: string | null = null;
     filteredCarCount: number = 0;
-    bookingData: { date: string; bookings: number }[] = [];
-    months: string[] = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+    monthlyBookingsChart: Chart | null = null;
+    bookingsChart: Chart | null = null;
+    selectedMonth: number = new Date().getMonth() + 1;
+    months = [
+        {value: 1, viewValue: 'January'},
+        {value: 2, viewValue: 'February'},
+        {value: 3, viewValue: 'March'},
+        {value: 4, viewValue: 'April'},
+        {value: 5, viewValue: 'May'},
+        {value: 6, viewValue: 'June'},
+        {value: 7, viewValue: 'July'},
+        {value: 8, viewValue: 'August'},
+        {value: 9, viewValue: 'September'},
+        {value: 10, viewValue: 'October'},
+        {value: 11, viewValue: 'November'},
+        {value: 12, viewValue: 'December'}
     ];
-    selectedMonth: string = this.months[new Date().getMonth()];
-  
 
     constructor(private carService: CarService, private bookingService: BookingService) {}
 
     ngOnInit(): void {
         this.fetchParkedCars();
         this.loadCarMakes();
+        this.loadBookingData();
+        this.updateParkedCarsByMakeChart();
     }
-
-    getMonthNumber(monthName: string): number {
-        return this.months.indexOf(monthName) + 1;
-      }
 
     fetchParkedCars() {
         this.carService.getParkedCars().subscribe((data: any[]) => {
@@ -64,33 +73,149 @@ export class HomeComponent {
 
     filterCarsByMake(): void {
         if (this.selectedCarMake) {
-            this.filteredCarCount = this.parkedCars.filter(car => car.vehicleMake === this.selectedCarMake).length;
+          this.filteredCarCount = this.parkedCars.filter(car => car.vehicleMake === this.selectedCarMake).length;
         } else {
-            this.filteredCarCount = this.parkedCars.length;
+          this.filteredCarCount = this.parkedCars.length;
         }
-    }
+        this.updateParkedCarsByMakeChart();
+      }
     
-    getVehicleImage(make: keyof typeof CarMakes): string {
-        return CarMakes[make];
-      }
+    getVehicleImage(make: keyof typeof CarPhotos, model: string): string {
+        return CarPhotos[make]?.[model];
+    }
 
-      loadBookingData(month: string) {
-        const monthNumber = this.getMonthNumber(month);
-        this.bookingService.getMonthlyBookingData(monthNumber).subscribe(data => {
-          this.bookingData = this.transformBookingData(data);
-        });
-      }
+    loadBookingData(): void {
+      this.bookingService.getMonthlyBookingData(this.selectedMonth).subscribe(
+          (data: number[]) => {
+              this.createBookingsChart(data);
+          },
+          (error) => {
+              console.error('Error fetching booking data:', error);
+          }
+      );
+  }
 
-      transformBookingData(data: any[]): { date: string; bookings: number }[] {
-        return data.map(entry => {
-          const day = entry[0]; 
-          const count = entry[1];
-          const date = `${this.months[this.getMonthNumber(this.selectedMonth) - 1]} ${day}`;
-          return { date, bookings: count };
-        });
-      }
+  createBookingsChart(data: number[]): void {
+    const ctx = document.getElementById('bookingsChart') as HTMLCanvasElement;
 
-      updateChart() {
-        this.loadBookingData(this.selectedMonth);
+    if (this.bookingsChart) {
+        this.bookingsChart.destroy();
+    }
+
+    const gradient = ctx.getContext('2d')!.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(204, 89, 89, 0.5)');
+    gradient.addColorStop(1, 'rgba(204, 89, 89, 0)');
+
+    this.bookingsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.map((_, index) => index + 1),
+            datasets: [{
+                label: 'Bookings',
+                data: data,
+                borderColor: 'rgb(204, 89, 89)',
+                borderWidth: 3,
+                fill: true,
+                backgroundColor: gradient,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false 
+                }
+            },
+            scales: {
+                x: {
+                    display: false,
+                    grid: {
+                        display: false 
+                    }
+                },
+                y: {
+                    display: false,
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            hover: {
+                mode: 'index',
+                intersect: false
+            },
+            elements: {
+                line: {
+                    tension: 0.4
+                },
+                point: {
+                    radius: 0,
+                    hoverRadius: 5,
+                }
+            }
+        } as ChartOptions
+    });
+}
+
+updateParkedCarsByMakeChart(): void {
+    const ctx = document.getElementById('parkedCarsByMakeChart') as HTMLCanvasElement;
+  
+    if (this.parkedCarsByMakeChart) {
+      this.parkedCarsByMakeChart.destroy();
+    }
+  
+    const filteredCount = this.filteredCarCount;
+    const totalCount = this.parkedCars.length;
+    const remainingCount = totalCount - filteredCount;
+  
+    const data: ChartData = {
+      labels: [this.selectedCarMake || 'Selected', 'Other'],
+      datasets: [{
+        data: [filteredCount, remainingCount],
+        backgroundColor: ['#cc5959', '#ffffff'],
+        borderColor: ['#cc5959', '#cccccc'],
+        borderWidth: 1,
+        hoverOffset: 4
+      }]
+    };
+  
+    const options: ChartOptions = {
+      responsive: false,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context: any) {
+              if (context.parsed !== undefined) {
+                const label = context.label || '';
+                const value = context.parsed;
+                const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                const percentage = ((value / total) * 100).toFixed(1);
+                return `${label}: ${value} (${percentage}%)`;
+              }
+              return '';
+            }
+          }
         }
+      }
+    };
+  
+    this.parkedCarsByMakeChart = new Chart(ctx, {
+      type: 'doughnut' as ChartType,
+      data: data,
+      options: options
+    });
+}
 }

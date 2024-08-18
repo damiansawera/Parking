@@ -24,7 +24,30 @@
         <p><strong>Last Parking:</strong> {{ latestParkingDate | date:'medium' }}</p>
         <p><strong>Favorite Spot:</strong> {{ mostCommonParkingSpot }}</p>
       </div>
+  </div>
+  <div class="car-selection-card card">
+    <h2>My cars</h2>
+    <div class="car-cards-container">
+      <div class="car-card" *ngFor="let car of cars" (click)="selectCar(car)" [class.selected]="selectedCar === car">
+        <div class="car-photo">
+          <img [src]="getVehicleImage(car.vehicleMake, car.vehicleModel)" alt="Car Photo">
+        </div>
+        <div class="vehicle-details">
+          <div class="registration-number">{{ car.registrationNumber }}</div>
+          <div class="vehicle-make">{{ car.vehicleMake }} {{ car.vehicleModel }}</div>
+        </div>
+      </div>
     </div>
+    <div class="dialog-actions">
+      <div class="right-buttons">
+        <button (click)="deleteCar()" 
+                [disabled]="!selectedCar" 
+                mat-raised-button 
+                class="btn btn-red-1"
+                [ngClass]="{'enabled': selectedCar, 'btn-disabled-2': !selectedCar}">
+          Delete car
+        </button>
+        <button (click)="addNewCar()" mat-raised-button class="btn btn-green-1">Add New Car</button>
   </div>
 </div>
 

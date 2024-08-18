@@ -35,9 +35,9 @@ export class BookingService {
     );
   }
 
-  getMonthlyBookingData(month: number): Observable<{ month: number; year: number; bookings: number }[]> {
+  getMonthlyBookingData(month: number): Observable<number[]> {
     const year = 2024;
-    return this.http.get<{ month: number; year: number; bookings: number }[]>(
+    return this.http.get<number[]>(
       `${this.getMonthlyBookingsUrl}?year=${year}&month=${month}`
     );
   }

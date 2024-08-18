@@ -9,6 +9,11 @@ import { WalletService } from '../../services/wallet-service/wallet.service';
 import { FormsModule } from '@angular/forms';
 import { DialogService } from '../../services/dialog-service/dialog.service';
 import { PayUService } from '../../services/payu-service/payu.service';
+import { Car } from '../../models/car';
+import { CarService } from '../../services/car-service/car.service';
+import { CarPhotos } from '../../models/car-photos';
+import { AddCarPopupComponent } from '../add-car-popup/add-car-popup.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-my-account',
@@ -28,16 +33,22 @@ export class MyAccountComponent implements OnInit {
   mostCommonParkingSpot: string = '';
   latestParkingDate: Date | null = null;
   amountToAdd: number = 0;
+  cars: Car[] = [];
+  selectedCar: Car | null = null;
 
   constructor(private userService: UserService,
               private bookingService: BookingService,
               private walletService: WalletService,
               private dialogService: DialogService,
-              private payUService: PayUService) {}
+              private payUService: PayUService,
+              private carService: CarService,
+              private dialog: MatDialog,
+            ) {}
 
   ngOnInit(): void {
     this.getUserInfo();
     this.getTotalBookingsCount();
+    this.loadCars();
   }
 
   addFundsPayU() {
@@ -89,5 +100,48 @@ getTotalBookingsCount() {
     this.totalBookingsCount = count;
   });
   this.bookingService.getTotalBookingsCount();
+}
+
+loadCars() {
+  this.carService.getAllUserCars().subscribe((cars: Car[]) => {
+  this.cars = cars;
+});
+}
+
+selectCar(car: Car) {
+  this.selectedCar = car;
+}
+
+getVehicleImage(make: keyof typeof CarPhotos, model: string): string {
+  return CarPhotos[make]?.[model];
+}
+
+deleteCar() {
+  if (this.selectedCar?.registrationNumber) {
+    this.carService.deleteCar(this.selectedCar.registrationNumber).subscribe({
+      next: () => {
+        this.cars = this.cars.filter(car => car.registrationNumber !== this.selectedCar?.registrationNumber);
+        this.selectedCar = null;
+      },
+      error: (error) => {
+        console.error('Error deleting car:', error);
+      }
+    });
+  }
+}
+
+addNewCar() {
+  const addCarDialogRef = this.dialog.open(AddCarPopupComponent, {
+    width: '40%',
+    height: '450px',
+  });
+
+  addCarDialogRef.afterClosed().subscribe(result => {
+    if (result === 'success') {
+      this.dialogService.openSuccessPopup("Car added successfully!").afterClosed().subscribe(() => {
+        this.loadCars();
+      });
+    }
+  });
 }
 }

@@ -2,7 +2,7 @@
     <div class="car-cards-container">
       <div class="car-card" *ngFor="let car of cars" (click)="selectCar(car)" [class.selected]="selectedCar === car">
         <div class="car-photo">
-          <img [src]="getVehicleImage(car.vehicleMake)" alt="Car Photo">
+          <img [src]="getVehicleImage(car.vehicleMake, car.vehicleModel)" alt="Car Photo">
         </div>
         <div class="vehicle-details">
           <div class="registration-number">{{ car.registrationNumber }}</div>

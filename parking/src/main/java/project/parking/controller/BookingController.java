@@ -35,11 +35,6 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body(bookingService.getBookingsCountByMonth(year, month));
     }
 
-//    @PostMapping
-//    public ResponseEntity<BookingDTO> createBooking(@RequestParam String registrationNumber, @RequestParam String parkingSpotNumber) {
-//        return ResponseEntity.status(HttpStatus.CREATED).body(bookingService.createBooking(registrationNumber, parkingSpotNumber));
-//    }
-
     @PutMapping("/{registrationNumber}/end")
     public ResponseEntity<BookingDTO> endBooking(@PathVariable String registrationNumber) {
         return ResponseEntity.status(HttpStatus.OK).body(bookingService.endBooking(registrationNumber));
