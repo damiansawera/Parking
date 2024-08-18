@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { Component, Inject, OnInit, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,16 +39,15 @@ export class AddCarPopupComponent implements OnInit {
   
   carMakes: string[] = [];
   form: FormGroup;
-  parkingSpotNumber: string;
+  parkingSpotNumber?: string;
   carModels: any;
 
   constructor(private ref:MatDialogRef<AddCarPopupComponent>,
     private carService: CarService,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { parkingSpotNumber: string }
+    @Inject(MAT_DIALOG_DATA) public data: { parkingSpotNumber?: string }
   ) {
-        this.parkingSpotNumber = data.parkingSpotNumber;
+        this.parkingSpotNumber = data?.parkingSpotNumber;
         this.form = this.formBuilder.group({
         registrationNumberField: ['',
         [Validators.required,

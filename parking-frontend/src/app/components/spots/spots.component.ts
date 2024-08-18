@@ -61,8 +61,12 @@ export class SpotsComponent implements OnInit {
   }
 
   loadUserCars() {
-    this.carService.getAllUserCars().subscribe((cars: Car[]) => {
-      this.userCars = cars;
+    this.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.carService.getAllUserCars().subscribe((cars: Car[]) => {
+          this.userCars = cars;
+        });
+      }
     });
   }
 

@@ -7,13 +7,13 @@
         <div class="car-cards-container">
             <div class="car-card" *ngFor="let parkedCar of parkedCars">
                 <div class="car-photo">
-                    <img [src]="getVehicleImage(parkedCar.vehicleMake)" alt="Car Photo">
+                    <img [src]="getVehicleImage(parkedCar.vehicleMake, parkedCar.vehicleModel)" alt="Car Photo">
                 </div>
                 <div class="vehicle-details">
                     <div class="vehicle-make">Make: {{ parkedCar.vehicleMake }}</div>
                     <div class="vehicle-model">Model: {{ parkedCar.vehicleModel }}</div>
                     <div class="registration-number">Registration: {{ parkedCar.registrationNumber }}</div>
-                    <div class="parking-spot-number">Spot: {{ parkedCar.parkingSpotNumber }}</div>
+                    <div class="parking-spot-number">Parking spot: {{ parkedCar.parkingSpotNumber }}</div>
                 </div>
             </div>
         </div>
@@ -22,31 +22,36 @@
         <div class="title">Statistics</div>
         <div class="statistics-container">
             <div class="statistics-card">
-                <div class="statistics-title"> Cars parked </div>
-                <div class="statistics-details">
-                    <div class="statistics-cars-parked"> {{ parkedCars.length }} </div>    
-                </div>
+              <div class="statistics-title">Bookings</div>
+              <div class="statistics-filter">
+                <mat-form-field appearance="outline" class="small-select">
+                  <mat-select placeholder="Select Month" [(value)]="selectedMonth" (selectionChange)="loadBookingData()">
+                    <mat-option *ngFor="let month of months" [value]="month.value">
+                      {{ month.viewValue }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="statistics-details"> 
+          
+                <canvas id="bookingsChart"></canvas>
+              </div>
             </div>
             <div class="statistics-card">
-                <div class="statistics-title"> Available parking spots </div>
-                <div class="statistics-details">
-                    <div class="statistics-cars-parked"> {{ 30 - parkedCars.length }} </div>    
-                </div>
+              <div class="statistics-title">Parked cars by make</div>
+              <div class="statistics-filter">
+                <mat-form-field appearance="outline" class="small-select">
+                  <mat-select class="select-car-filter" placeholder="Select Car Make" [(value)]="selectedCarMake" (selectionChange)="filterCarsByMake()">
+                    <mat-option *ngFor="let make of carMakes" [value]="make">{{ make }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="statistics-details">
+                <div class="statistics-cars-parked-filtered">{{ filteredCarCount }}</div>
+                <canvas id="parkedCarsByMakeChart"></canvas>
+              </div>
             </div>
-            <div class="statistics-card">
-                <div class="statistics-title"> Parked cars by make </div>
-                <div class="statistics-filter">
-                    <mat-form-field class="small-select">
-                      <mat-select class="select-car-filter" placeholder="Select Car Make" [(value)]="selectedCarMake" (selectionChange)="filterCarsByMake()">
-                        <mat-option *ngFor="let make of carMakes" [value]="make">{{ make }}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                <div class="statistics-details">
-                    <div class="statistics-cars-parked-filtered"> {{ filteredCarCount }}</div>    
-                </div>
-            </div>
+          </div>
         </div>
     </div>
-</div>
 </div>

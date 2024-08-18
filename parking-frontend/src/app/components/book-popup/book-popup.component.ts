@@ -8,6 +8,7 @@ import { CarService } from '../../services/car-service/car.service';
 import { CarMakes } from '../../enums/car-makes';
 import { AddCarPopupComponent } from '../add-car-popup/add-car-popup.component';
 import { DialogService } from '../../services/dialog-service/dialog.service';
+import { CarPhotos } from '../../models/car-photos';
 
 
 @Component({
@@ -47,8 +48,8 @@ selectCar(car: Car) {
   this.selectedCar = car;
 }
 
-getVehicleImage(make: keyof typeof CarMakes): string {
-  return CarMakes[make];
+getVehicleImage(make: keyof typeof CarPhotos, model: string): string {
+  return CarPhotos[make]?.[model];
 }
 
 addNewCar() {

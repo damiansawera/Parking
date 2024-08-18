@@ -26,6 +26,7 @@
     display: flex;
     justify-content: space-between;
     gap: 20px;
+    padding-bottom: 20px;
   }
   
   .account-details-card {
@@ -41,6 +42,7 @@
   .account-details-card p {
     margin-bottom: 10px;
   }
+  
   
   .popup-overlay {
     position: fixed;
@@ -80,6 +82,10 @@
     flex-direction: column;
     gap: 10px;
     margin-bottom: 15px;
+  }
+
+  .dialog-actions {
+justify-content: flex-end;
   }
   
   @media (max-width: 768px) {
